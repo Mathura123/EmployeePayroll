@@ -17,3 +17,10 @@ start date not null
 );
 --gives the info about the table named employee_payroll
 select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = 'employee_payroll';
+--Insert datas in table employee_payroll
+insert into employee_payroll values
+('Bill',100000.00,'2018-01-03'),
+('Terissa',200000.00,'2019-11-13'),
+('Charlie',300000.00,'2020-05-21');
+--views all datas in employee_payroll
+select * from employee_payroll;
