@@ -24,3 +24,7 @@ insert into employee_payroll values
 ('Charlie',300000.00,'2020-05-21');
 --retrives all datas in employee_payroll
 select * from employee_payroll;
+--to retrieve data of Bill's salary
+select salary from employee_payroll where name = 'Bill';
+--to retrieve datas of employees in between 2018-01-01 and today
+select * from employee_payroll where start between '2018-01-01' and GETDATE();
