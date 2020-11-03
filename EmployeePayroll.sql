@@ -43,3 +43,7 @@ update employee_payroll set gender = 'M' where name = 'Bill' or name = 'Charlie'
 update employee_payroll set gender = 'F' where name = 'Terissa';
 --retrives all datas in employee_payroll
 select * from employee_payroll;
+
+--Retrives Sum, Average, Minimun, Maximum salaries and count for male and female 
+select gender,SUM(salary) as 'Sum of Salaries', AVG(salary) as 'Average Salary', MIN(salary) as 'Minimum Salary', MAX(salary) as 'Maximum Salary', COUNT(gender) as 'Count' from employee_payroll
+group by gender;
