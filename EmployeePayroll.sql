@@ -44,6 +44,13 @@ update employee_payroll set gender = 'F' where name = 'Terissa';
 --retrives all datas in employee_payroll
 select * from employee_payroll;
 
---Retrives Sum, Average, Minimun, Maximum salaries and count for male and female 
+--retrives Sum, Average, Minimun, Maximum salaries and count for male and female 
 select gender,SUM(salary) as 'Sum of Salaries', AVG(salary) as 'Average Salary', MIN(salary) as 'Minimum Salary', MAX(salary) as 'Maximum Salary', COUNT(gender) as 'Count' from employee_payroll
 group by gender;
+
+--adds column named 'phone' 
+alter table employee_payroll add phone varchar(15);
+--adds not nullable column named 'department' with default value ''
+alter table employee_payroll add department varchar(50) not null default('');
+--adds column named 'address' with default value 'India'
+alter table employee_payroll add address varchar(150) default('India');
