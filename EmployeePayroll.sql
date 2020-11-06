@@ -12,12 +12,16 @@ select DB_NAME();
 create table employee_payroll
 (
 id int identity(1,1),
-name varchar(50) not null,
+name varchar(150) not null,
 salary money not null,
 start date not null
 );
+--sets id as primary key
+ALTER TABLE employee_payroll
+ADD CONSTRAINT PK_ID PRIMARY KEY (id);
 --gives the info about the table named employee_payroll
 select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = 'employee_payroll';
+exec sp_columns employee_payroll; 
 
 --Insert datas in table employee_payroll
 insert into employee_payroll values
@@ -54,3 +58,14 @@ alter table employee_payroll add phone varchar(15);
 alter table employee_payroll add department varchar(50) not null default('');
 --adds column named 'address' with default value 'India'
 alter table employee_payroll add address varchar(150) default('India');
+
+--renames salary column to basic_pay
+EXEC sp_RENAME 'employee_payroll.salary', 'basic_pay', 'COLUMN';
+--adds deductions column
+alter table employee_payroll add deductions float;
+--adds taxable_pay column
+alter table employee_payroll add taxable_pay float;
+--adds net_pay column
+alter table employee_payroll add net_pay float;
+--adds tax column
+alter table employee_payroll add tax float;
