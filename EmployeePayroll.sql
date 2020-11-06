@@ -69,3 +69,8 @@ alter table employee_payroll add taxable_pay float;
 alter table employee_payroll add net_pay float;
 --adds tax column
 alter table employee_payroll add tax float;
+
+--inserted terissa once more
+insert into employee_payroll 
+values('Terissa',200000,'2018-10-13','F',null,'Marketing','Mumbai',12000,1880,120000,12000);
+select * from employee_payroll where name = 'Terissa';
