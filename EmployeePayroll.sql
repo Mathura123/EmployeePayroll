@@ -150,9 +150,38 @@ insert into payroll values
 (2,'12-06-1995',300000,15000,20000),
 (3,'11-02-2020',100000,5000,2000),
 (4,'10-01-2020',30000,2000,0);
+
 --for viewing inserted values
 select * from company;
 select * from employee;
 select * from department;
 select * from employee_department;
 select * from payroll;
+--retrives data for all employee
+select e.employee_id,name,c.company_id,company_name,d.dept_id,d.dept_name,gender,phone_no,address,start,basic_pay,deduction,taxable_pay,income_tax,net_pay 
+from company c 
+inner join employee e on c.company_id=e.company_id 
+inner join employee_department ed on ed.employee_id = e.employee_id
+inner join department d on d.dept_id= ed.dept_id
+inner join payroll p on p.employee_id = e.employee_id;
+--retrives data for any employee
+select e.employee_id,name,c.company_id,company_name,d.dept_id,d.dept_name,gender,phone_no,address,start,basic_pay,deduction,taxable_pay,income_tax,net_pay 
+from company c 
+inner join employee e on c.company_id=e.company_id 
+inner join employee_department ed on ed.employee_id = e.employee_id
+inner join department d on d.dept_id= ed.dept_id
+inner join payroll p on p.employee_id = e.employee_id
+where name = 'Bill';
+--retrives employees that started in between 2018-01-01 and today 
+select e.employee_id,name,c.company_id,company_name,d.dept_id,d.dept_name,gender,phone_no,address,start,basic_pay,deduction,taxable_pay,income_tax,net_pay 
+from company c 
+inner join employee e on c.company_id=e.company_id 
+inner join employee_department ed on ed.employee_id = e.employee_id
+inner join department d on d.dept_id= ed.dept_id
+inner join payroll p on p.employee_id = e.employee_id
+where start between '2018-01-01' and GETDATE();
+--use of aggregates functions  
+select gender,sum(basic_pay) as 'Sum', avg(basic_pay) as 'Average', min(basic_pay) as 'Min' , max(basic_pay) as 'Max', count(basic_pay) as 'Count' 
+from employee e
+inner join payroll p on p.employee_id = e.employee_id
+group by gender;
