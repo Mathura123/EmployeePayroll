@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EmployeePayroll
+﻿namespace EmployeePayroll
 {
+    using System;
+
     public class EmployeeModel
     {
         public int employeeID { get; set; }

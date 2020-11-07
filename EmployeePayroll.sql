@@ -131,6 +131,9 @@ insert into employee values
 (1,'Terissa', 'F', '8888888888',default),
 (1,'Charlie', 'M', '8888888888', 'Dalal Street'),
 (2,'Clinton','M','4545454545','Andheri road');
+insert into employee values
+(2,'Steve','M','9999999999','Lane 24, Nagar colony, Mumbai')
+select * from employee;
 --inserted values in department table
 insert into department values
 ('Marketing'),
@@ -144,13 +147,16 @@ insert into employee_department values
 (2,101),
 (3,103),
 (4,102);
+insert into employee_department values
+(5,102);
 --inserted values in payroll table. Only employee_id,start_date,basic_pay,deductions,income_tax inserted. Others are derived
 insert into payroll values
 (1,'01-20-1998',200000,12000,10000),
 (2,'12-06-1995',300000,15000,20000),
 (3,'11-02-2020',100000,5000,2000),
 (4,'10-01-2020',30000,2000,0);
-
+insert into payroll values
+(5,'01-20-2019',300000,15000,15000);
 --for viewing inserted values
 select * from company;
 select * from employee;
@@ -185,3 +191,28 @@ select gender,sum(basic_pay) as 'Sum', avg(basic_pay) as 'Average', min(basic_pa
 from employee e
 inner join payroll p on p.employee_id = e.employee_id
 group by gender;
+
+--create procedure for selecting all rows
+CREATE PROCEDURE SelectAllRowsFromEmployeePayroll
+AS
+select e.employee_id,name,c.company_id,company_name,d.dept_id,d.dept_name,gender,phone_no,address,start,basic_pay,deduction,taxable_pay,income_tax,net_pay 
+from company c 
+inner join employee e on c.company_id=e.company_id 
+inner join employee_department ed on ed.employee_id = e.employee_id
+inner join department d on d.dept_id= ed.dept_id
+inner join payroll p on p.employee_id = e.employee_id
+--exec of stored procedure
+Exec SelectAllRowsFromEmployeePayroll;
+
+select * from payroll;
+--created procedure for updating salary
+CREATE PROCEDURE UpdateSalaryByName
+(
+@EmployeeName varchar(255),
+@BasicPay money
+)
+AS
+update payroll set basic_pay = @BasicPay where employee_id in (select employee_id from employee where name = @EmployeeName);
+
+exec UpdateSalaryByName "Bill",200000;
+

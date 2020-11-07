@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace EmployeePayroll
+﻿namespace EmployeePayroll
 {
+    using System;
+
     class Program
     {
         static void Main(string[] args)
@@ -15,7 +15,7 @@ namespace EmployeePayroll
             modelObj.employeeID = 2;
             modelObj.basicPay = 195000;
             modelObj.employeeName = "Terissa";
-            empObj.AddEmployee(modelObj);
+            empObj.UpdateEmployeeSalary(modelObj);
         }
     }
 }

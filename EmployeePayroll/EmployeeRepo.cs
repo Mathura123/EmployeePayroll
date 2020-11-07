@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-using System.Security.Cryptography.X509Certificates;
-
-namespace EmployeePayroll
+﻿namespace EmployeePayroll
 {
+    using System;
+    using System.Data.SqlClient;
+
     public class EmployeeRepo
     {
+        /// <summary>The connection string</summary>
         public static string connectionString = @"Data Source=DESKTOP-8UMNEFU\MSSQLSERVER01;Initial Catalog=payroll_service;Integrated Security=True";
         //SqlConnection connection = new SqlConnection(connectionString);
+        /// <summary>Checks the connection.</summary>
+        /// <returns>
+        ///   <br />
+        /// </returns>
         public bool CheckConnection()
         {
             try
@@ -31,6 +32,7 @@ namespace EmployeePayroll
                 return false;
             }
         }
+        /// <summary>Gets all employee.</summary>
         public void GetAllEmployee()
         {
             try
@@ -81,7 +83,12 @@ namespace EmployeePayroll
                 Console.WriteLine(e.Message);
             }
         }
-        public bool AddEmployee(EmployeeModel model)
+        /// <summary>Updates the employee salary.</summary>
+        /// <param name="model">The empModel</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public bool UpdateEmployeeSalary(EmployeeModel model)
         {
             try
             {
