@@ -9,7 +9,8 @@ namespace EmployeePayroll
             Console.WriteLine("Welcome to Employee Payroll Assignment");
             Console.WriteLine("======================================");
             EmployeeRepo empObj = new EmployeeRepo();
-            empObj.CheckConnection();
+            //empObj.CheckConnection();
+            empObj.GetAllEmployee();
         }
     }
 }
