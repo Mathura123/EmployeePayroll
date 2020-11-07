@@ -1,23 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
+using System.Security.Cryptography.X509Certificates;
 
 namespace EmployeePayroll
 {
     public class EmployeeRepo
     {
         public static string connectionString = @"Data Source=DESKTOP-8UMNEFU\MSSQLSERVER01;Initial Catalog=payroll_service;Integrated Security=True";
-        SqlConnection connection = new SqlConnection(connectionString);
+        //SqlConnection connection = new SqlConnection(connectionString);
         public bool CheckConnection()
         {
             try
             {
-                using (this.connection)
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    this.connection.Open();
+                    connection.Open();
                     Console.WriteLine("Connection is opened");
                     Console.WriteLine("Connection good");
-                    this.connection.Close();
+                    connection.Close();
                     Console.WriteLine("Connection is closed");
                     return true;
                 }
@@ -33,12 +36,12 @@ namespace EmployeePayroll
             try
             {
                 EmployeeModel employeeModel = new EmployeeModel();
-                using (this.connection)
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     string query = @"SelectAllRowsFromEmployeePayroll";
-                    SqlCommand cmd = new SqlCommand(query, this.connection);
+                    SqlCommand cmd = new SqlCommand(query, connection);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    this.connection.Open();
+                    connection.Open();
                     SqlDataReader dr = cmd.ExecuteReader();
                     if (dr.HasRows)
                     {
@@ -70,11 +73,39 @@ namespace EmployeePayroll
                     {
                         System.Console.WriteLine("No data found");
                     }
+                    connection.Close();
                 }
             }
             catch (Exception e)
             {
-                System.Console.WriteLine(e.Message);
+                Console.WriteLine(e.Message);
+            }
+        }
+        public bool AddEmployee(EmployeeModel model)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand("UpdateSalaryByName", connection);
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@EmployeeName", model.employeeName);
+                    command.Parameters.AddWithValue("@BasicPay", model.basicPay);
+                    connection.Open();
+                    var result = command.ExecuteNonQuery();
+                    connection.Close();
+                    Console.WriteLine($"{result} rows affected");
+                    if (result != 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
             }
         }
     }
