@@ -10,15 +10,15 @@
         public string companyName { get; set; }
         public int departmentId { get; set; }
         public string departmentName { get; set; }
-        public char gender { get; set; }
+        public char? gender { get; set; }
         public string phoneNumber { get; set; }
         public string address { get; set; }
         public DateTime startDate { get; set; }
-        public decimal basicPay { get; set; }
-        public decimal deductions { get; set; }
-        public decimal taxablePay { get; set; }
-        public decimal tax { get; set; }
-        public decimal netPay { get; set; }
+        public decimal? basicPay { get; set; }
+        public Nullable<decimal> deductions { get; set; }
+        public decimal? taxablePay { get; set; }
+        public decimal? tax { get; set; }
+        public decimal? netPay { get; set; }
         /// <summary>Overrides to string.</summary>
         /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()

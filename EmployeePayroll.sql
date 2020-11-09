@@ -259,3 +259,22 @@ group by gender;
 --exec of stored procedure
 Exec GetAggValuesByGender;
 
+CREATE PROCEDURE InsertEmployee
+(
+@companyId int,
+@name varchar(150),
+@gender varchar(1),
+@phoneNo varchar(15),
+@address varchar(150)
+)
+AS
+insert into employee values
+(@companyId,@name,@gender,@phoneNo,@address);
+
+select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = 'employee';
+--exec of stored procedure
+exec InsertEmployee 1,'Harshita','F',null,'Vilas nagar';
+select * from employee
+
+insert into employee_department values
+(1005,103);

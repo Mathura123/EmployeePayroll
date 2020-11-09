@@ -1,6 +1,7 @@
 ﻿namespace EmployeePayroll
 {
     using System;
+    using System.Data;
     using System.Data.SqlClient;
     using System.Reflection.Metadata.Ecma335;
 
@@ -60,15 +61,15 @@
                             employeeModel.companyName = dr.GetString(3);
                             employeeModel.departmentId = dr.GetInt32(4);
                             employeeModel.departmentName = dr.GetString(5);
-                            employeeModel.gender = Convert.ToChar(dr.GetString(6));
-                            employeeModel.phoneNumber = dr.GetString(7);
-                            employeeModel.address = dr.GetString(8);
+                            employeeModel.gender = dr.IsDBNull(6) ? ' ' : Convert.ToChar(dr.GetString(6));
+                            employeeModel.phoneNumber = dr.IsDBNull(7) ? " " : dr.GetString(7);
+                            employeeModel.address = dr.IsDBNull(8) ? " " : dr.GetString(8);
                             employeeModel.startDate = dr.GetDateTime(9);
                             employeeModel.basicPay = dr.GetDecimal(10);
                             employeeModel.deductions = dr.GetDecimal(11);
-                            employeeModel.taxablePay = dr.GetDecimal(12);
-                            employeeModel.tax = dr.GetDecimal(13);
-                            employeeModel.netPay = dr.GetDecimal(14);
+                            employeeModel.taxablePay = dr.IsDBNull(12) ? 0 : dr.GetDecimal(12);
+                            employeeModel.tax = dr.IsDBNull(13) ? 0 : dr.GetDecimal(13);
+                            employeeModel.netPay = dr.IsDBNull(14) ? 0 : dr.GetDecimal(14);
                             Console.WriteLine(employeeModel);
                         }
                         CustomPrint.PrintDashLine();
@@ -125,7 +126,7 @@
         {
             try
             {
-                EmployeeModel model = new EmployeeModel();
+                EmployeeModel employeeModel = new EmployeeModel();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand command = new SqlCommand("GetEmpByName", connection);
@@ -141,22 +142,22 @@
                         CustomPrint.PrintDashLine();
                         while (dr.Read())
                         {
-                            model.employeeID = dr.GetInt32(0);
-                            model.employeeName = dr.GetString(1);
-                            model.companyId = dr.GetInt32(2);
-                            model.companyName = dr.GetString(3);
-                            model.departmentId = dr.GetInt32(4);
-                            model.departmentName = dr.GetString(5);
-                            model.gender = Convert.ToChar(dr.GetString(6));
-                            model.phoneNumber = dr.GetString(7);
-                            model.address = dr.GetString(8);
-                            model.startDate = dr.GetDateTime(9);
-                            model.basicPay = dr.GetDecimal(10);
-                            model.deductions = dr.GetDecimal(11);
-                            model.taxablePay = dr.GetDecimal(12);
-                            model.tax = dr.GetDecimal(13);
-                            model.netPay = dr.GetDecimal(14);
-                            Console.WriteLine(model);
+                            employeeModel.employeeID = dr.GetInt32(0);
+                            employeeModel.employeeName = dr.GetString(1);
+                            employeeModel.companyId = dr.GetInt32(2);
+                            employeeModel.companyName = dr.GetString(3);
+                            employeeModel.departmentId = dr.GetInt32(4);
+                            employeeModel.departmentName = dr.GetString(5);
+                            employeeModel.gender = dr.IsDBNull(6) ? ' ' : Convert.ToChar(dr.GetString(6));
+                            employeeModel.phoneNumber = dr.IsDBNull(7) ? " " : dr.GetString(7);
+                            employeeModel.address = dr.IsDBNull(8) ? " " : dr.GetString(8);
+                            employeeModel.startDate = dr.GetDateTime(9);
+                            employeeModel.basicPay = dr.GetDecimal(10);
+                            employeeModel.deductions = dr.GetDecimal(11);
+                            employeeModel.taxablePay = dr.IsDBNull(12) ? 0 : dr.GetDecimal(12);
+                            employeeModel.tax = dr.IsDBNull(13) ? 0 : dr.GetDecimal(13);
+                            employeeModel.netPay = dr.IsDBNull(14) ? 0 : dr.GetDecimal(14);
+                            Console.WriteLine(employeeModel);
                         }
                         CustomPrint.PrintDashLine();
                         Console.WriteLine();
@@ -181,7 +182,7 @@
         {
             try
             {
-                EmployeeModel model = new EmployeeModel();
+                EmployeeModel employeeModel = new EmployeeModel();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand command = new SqlCommand("GetEmpInDateRange", connection);
@@ -198,22 +199,22 @@
                         CustomPrint.PrintDashLine();
                         while (dr.Read())
                         {
-                            model.employeeID = dr.GetInt32(0);
-                            model.employeeName = dr.GetString(1);
-                            model.companyId = dr.GetInt32(2);
-                            model.companyName = dr.GetString(3);
-                            model.departmentId = dr.GetInt32(4);
-                            model.departmentName = dr.GetString(5);
-                            model.gender = Convert.ToChar(dr.GetString(6));
-                            model.phoneNumber = dr.GetString(7);
-                            model.address = dr.GetString(8);
-                            model.startDate = dr.GetDateTime(9);
-                            model.basicPay = dr.GetDecimal(10);
-                            model.deductions = dr.GetDecimal(11);
-                            model.taxablePay = dr.GetDecimal(12);
-                            model.tax = dr.GetDecimal(13);
-                            model.netPay = dr.GetDecimal(14);
-                            Console.WriteLine(model);
+                            employeeModel.employeeID = dr.GetInt32(0);
+                            employeeModel.employeeName = dr.GetString(1);
+                            employeeModel.companyId = dr.GetInt32(2);
+                            employeeModel.companyName = dr.GetString(3);
+                            employeeModel.departmentId = dr.GetInt32(4);
+                            employeeModel.departmentName = dr.GetString(5);
+                            employeeModel.gender = dr.IsDBNull(6) ? ' ' : Convert.ToChar(dr.GetString(6));
+                            employeeModel.phoneNumber = dr.IsDBNull(7) ? " " : dr.GetString(7);
+                            employeeModel.address = dr.IsDBNull(8) ? " " : dr.GetString(8);
+                            employeeModel.startDate = dr.GetDateTime(9);
+                            employeeModel.basicPay = dr.GetDecimal(10);
+                            employeeModel.deductions = dr.GetDecimal(11);
+                            employeeModel.taxablePay = dr.IsDBNull(12) ? 0 : dr.GetDecimal(12);
+                            employeeModel.tax = dr.IsDBNull(13) ? 0 : dr.GetDecimal(13);
+                            employeeModel.netPay = dr.IsDBNull(14) ? 0 : dr.GetDecimal(14);
+                            Console.WriteLine(employeeModel);
                         }
                         CustomPrint.PrintDashLine();
                         Console.WriteLine();
@@ -230,11 +231,12 @@
                 return false;
             }
         }
+        /// <summary>Gets the aggregate values of employees basic salary by gender.</summary>
+        /// <returns>true if dr is returned and has rows.false if no data or connection failed</returns>
         public bool GetAggValuesOfEmpByGender()
         {
             try
             {
-                EmployeeModel model = new EmployeeModel();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand command = new SqlCommand("GetAggValuesByGender", connection);
@@ -263,6 +265,43 @@
                     }
                     CustomPrint.PrintInMagenta("No data found");
                     connection.Close();
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                CustomPrint.PrintInMagenta(e.Message);
+                return false;
+            }
+        }
+        /// <summary>Adds the employee.</summary>
+        /// <param name="empModel">The emp model.</param>
+        /// <returns>true if dr is returned and has rows.false if no data or connection failed</returns>
+        public bool AddEmployee(EmployeeModel empModel)
+        {
+            try
+            {
+                if (empModel.companyId.Equals(default(int)))
+                    throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.NO_COMPANY_ID, "No company id given");
+                if (empModel.employeeName.Equals(default(string)))
+                    throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.NO_EMP_NAME, "No employee name given");
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand("InsertEmployee", connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@companyId", empModel.companyId);
+                    command.Parameters.AddWithValue("@name", empModel.employeeName);
+                    command.Parameters.AddWithValue("@gender", String.IsNullOrEmpty(empModel.gender.ToString()) ? Convert.DBNull : empModel.gender);
+                    command.Parameters.AddWithValue("@phoneNo", empModel.phoneNumber ?? Convert.DBNull);
+                    command.Parameters.AddWithValue("@address", empModel.address ?? Convert.DBNull);
+                    connection.Open();
+                    var result = command.ExecuteNonQuery();
+                    connection.Close();
+                    CustomPrint.PrintInRed($"{result} rows affected");
+                    if (result != 0)
+                    {
+                        return true;
+                    }
                     return false;
                 }
             }
