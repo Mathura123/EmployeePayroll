@@ -230,5 +230,47 @@
                 return false;
             }
         }
+        public bool GetAggValuesOfEmpByGender()
+        {
+            try
+            {
+                EmployeeModel model = new EmployeeModel();
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand("GetAggValuesByGender", connection);
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    connection.Open();
+                    SqlDataReader dr = command.ExecuteReader();
+                    if (dr.HasRows)
+                    {
+                        CustomPrint.PrintInRed($"Aggregate Values of basic salary for employees are : ");
+                        CustomPrint.PrintDashLine();
+                        Console.WriteLine(CustomPrint.PrintRow("Gender", "Sum", "Average", "Min", "Max", "Count"));
+                        CustomPrint.PrintDashLine();
+                        while (dr.Read())
+                        {
+                            string gender = dr.GetString(0);
+                            string sum = dr.GetDecimal(1).ToString();
+                            string average = dr.GetDecimal(2).ToString();
+                            string min = dr.GetDecimal(3).ToString();
+                            string max = dr.GetDecimal(4).ToString();
+                            string count = dr.GetInt32(5).ToString();
+                            Console.WriteLine(CustomPrint.PrintRow(gender, sum, average, min, max, count));
+                        }
+                        CustomPrint.PrintDashLine();
+                        Console.WriteLine();
+                        return true;
+                    }
+                    CustomPrint.PrintInMagenta("No data found");
+                    connection.Close();
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                CustomPrint.PrintInMagenta(e.Message);
+                return false;
+            }
+        }
     }
 }

@@ -248,3 +248,14 @@ inner join payroll p on p.employee_id = e.employee_id
 where start between @initialDate and @lastDate; 
 --exec of stored procedure
 Exec GetEmpInDateRange '12-12-1996', '11-09-2020';
+
+--create procedure for aggregate functions by gender
+CREATE PROCEDURE GetAggValuesByGender
+AS
+select gender,sum(basic_pay) as 'Sum', avg(basic_pay) as 'Average', min(basic_pay) as 'Min' , max(basic_pay) as 'Max', count(basic_pay) as 'Count' 
+from employee e
+inner join payroll p on p.employee_id = e.employee_id
+group by gender;
+--exec of stored procedure
+Exec GetAggValuesByGender;
+

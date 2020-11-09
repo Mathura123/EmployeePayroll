@@ -18,6 +18,7 @@
             //empObj.UpdateEmployeeSalary(modelObj);
             empObj.GetEmpByName("Terissa");
             empObj.GetEmpInDateRange(Convert.ToDateTime("12/12/1996"), Convert.ToDateTime("12/12/2020"));
+            empObj.GetAggValuesOfEmpByGender();
         }
     }
 }
