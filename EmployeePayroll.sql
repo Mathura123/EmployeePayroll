@@ -271,10 +271,32 @@ AS
 insert into employee values
 (@companyId,@name,@gender,@phoneNo,@address);
 
-select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = 'employee';
+select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = 'payroll';
 --exec of stored procedure
 exec InsertEmployee 1,'Harshita','F',null,'Vilas nagar';
 select * from employee
 
 insert into employee_department values
 (1005,103);
+
+select * from payroll
+
+--deleted taxable_pay,net_pay,income_tax,deduction column to convert it to derived columns
+ALTER TABLE payroll
+DROP COLUMN taxable_pay
+ALTER TABLE payroll
+DROP COLUMN net_pay
+ALTER TABLE payroll
+DROP COLUMN income_tax
+ALTER TABLE payroll
+DROP COLUMN deduction
+
+--added deduction,taxable_pay,income_tax,net_pay derived from basic_pay
+ALTER TABLE payroll
+ADD deduction AS Basic_pay*0.2;
+ALTER TABLE payroll
+ADD taxable_pay AS Basic_pay-(Basic_pay*0.2);
+ALTER TABLE payroll
+ADD income_tax AS (Basic_pay-(Basic_pay*0.2))*0.1;
+ALTER TABLE payroll
+ADD net_pay AS (Basic_pay-(Basic_pay*0.2))*0.9;
