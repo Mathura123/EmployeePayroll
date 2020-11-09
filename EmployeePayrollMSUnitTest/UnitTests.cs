@@ -34,5 +34,13 @@ namespace EmployeePayrollMSUnitTest
             bool result = empRepoObj.GetEmpInDateRange(Convert.ToDateTime("12/12/1996"), Convert.ToDateTime("12/12/2020"));
             Assert.AreEqual(expected, result);
         }
+        [TestMethod]
+        public void GetAggValuesOfEmpByGender_ShouldReturn_True_IfConnectionProper_And_HasRows()
+        {
+            bool expected = true;
+            EmployeeRepo empRepoObj = new EmployeeRepo();
+            bool result = empRepoObj.GetAggValuesOfEmpByGender();
+            Assert.AreEqual(expected, result);
+        }
     }
 }
