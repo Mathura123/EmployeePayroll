@@ -1,9 +1,7 @@
 ﻿namespace EmployeePayroll
 {
     using System;
-    using System.Data;
     using System.Data.SqlClient;
-    using System.Reflection.Metadata.Ecma335;
 
     public class EmployeeRepo
     {
@@ -279,6 +277,7 @@
         /// <returns>true if dr is returned and has rows.false if no data or connection failed</returns>
         public bool AddEmployee(EmployeeModel empModel)
         {
+            int id = default(int);
             try
             {
                 if (empModel.companyId.Equals(default(int)))
@@ -287,22 +286,31 @@
                     throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.NO_EMP_NAME, "No employee name given");
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    SqlCommand command = new SqlCommand("InsertEmployee", connection);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@companyId", empModel.companyId);
-                    command.Parameters.AddWithValue("@name", empModel.employeeName);
-                    command.Parameters.AddWithValue("@gender", String.IsNullOrEmpty(empModel.gender.ToString()) ? Convert.DBNull : empModel.gender);
-                    command.Parameters.AddWithValue("@phoneNo", empModel.phoneNumber ?? Convert.DBNull);
-                    command.Parameters.AddWithValue("@address", empModel.address ?? Convert.DBNull);
+                    SqlCommand command = new SqlCommand(@"insert into employee values ('" +
+                                                empModel.companyId+ "','" + empModel.employeeName + "','" +
+                                               empModel.gender + "','" + empModel.phoneNumber + "','"+ empModel.address +"'); " +
+                                               "Select @@identity", connection);
+                    connection.Open();
+                    id = Convert.ToInt32(command.ExecuteScalar());
+                    connection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                CustomPrint.PrintInMagenta(e.Message);
+            }
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(@"Insert into payroll values ('"+id +"','"+empModel.startDate+"','"+empModel.basicPay+"');", connection);
                     connection.Open();
                     var result = command.ExecuteNonQuery();
                     connection.Close();
                     CustomPrint.PrintInRed($"{result} rows affected");
-                    if (result != 0)
-                    {
-                        return true;
-                    }
+                    if(result==0)
                     return false;
+                    return true;
                 }
             }
             catch (Exception e)

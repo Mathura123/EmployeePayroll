@@ -300,3 +300,15 @@ ALTER TABLE payroll
 ADD income_tax AS (Basic_pay-(Basic_pay*0.2))*0.1;
 ALTER TABLE payroll
 ADD net_pay AS (Basic_pay-(Basic_pay*0.2))*0.9;
+
+--altered payroll and employee_department to add delete cascaded foreign key constraint
+EXEC sp_helpconstraint 'payroll';  
+ALTER TABLE payroll DROP CONSTRAINT FK__payroll__employe__31EC6D26;
+EXEC sp_helpconstraint 'employee_department';  
+ALTER TABLE employee_department DROP CONSTRAINT FK__employee___emplo__2F10007B;
+ALTER TABLE payroll
+add CONSTRAINT FKey_Payroll FOREIGN KEY(employee_id) REFERENCES employee(employee_id)
+ON DELETE CASCADE;
+ALTER TABLE employee_department
+add CONSTRAINT FKey_Emp_EmpDept FOREIGN KEY(employee_id) REFERENCES employee(employee_id)
+ON DELETE CASCADE;
