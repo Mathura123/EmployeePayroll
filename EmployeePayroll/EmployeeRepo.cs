@@ -2,6 +2,7 @@
 {
     using System;
     using System.Data.SqlClient;
+    using System.Reflection.Metadata.Ecma335;
 
     public class EmployeeRepo
     {
@@ -19,16 +20,16 @@
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-                    Console.WriteLine("Connection is opened");
-                    Console.WriteLine("Connection good");
+                    CustomPrint.PrintInRed("Connection is opened");
+                    CustomPrint.PrintInRed("Connection good");
                     connection.Close();
-                    Console.WriteLine("Connection is closed");
+                    CustomPrint.PrintInRed("Connection is closed");
                     return true;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                CustomPrint.PrintInMagenta(e.Message);
                 return false;
             }
         }
@@ -47,6 +48,7 @@
                     SqlDataReader dr = cmd.ExecuteReader();
                     if (dr.HasRows)
                     {
+                        CustomPrint.PrintInRed($"All employees data :");
                         CustomPrint.PrintDashLine();
                         Console.WriteLine(CustomPrint.PrintRow("Emp ID", "Emp Name", "Company ID", "Company Name", "Dept ID", "Dept Name", "Gender", "Phone No", "Address", "Start Date", "Basic Pay", "Deductions", "Taxable Pay", "Tax", "Net Pay"));
                         CustomPrint.PrintDashLine();
@@ -70,17 +72,18 @@
                             Console.WriteLine(employeeModel);
                         }
                         CustomPrint.PrintDashLine();
+                        Console.WriteLine();
                     }
                     else
                     {
-                        System.Console.WriteLine("No data found");
+                        CustomPrint.PrintInMagenta("No data found");
                     }
                     connection.Close();
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                CustomPrint.PrintInMagenta(e.Message);
             }
         }
         /// <summary>Updates the employee salary.</summary>
@@ -101,7 +104,7 @@
                     connection.Open();
                     var result = command.ExecuteNonQuery();
                     connection.Close();
-                    Console.WriteLine($"{result} rows affected");
+                    CustomPrint.PrintInRed($"{result} rows affected");
                     if (result != 0)
                     {
                         return true;
@@ -111,7 +114,62 @@
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                CustomPrint.PrintInMagenta(e.Message);
+                return false;
+            }
+        }
+        /// <summary>Gets employee by name.</summary>
+        /// <param name="empName">Name of the emp.</param>
+        /// <returns>true if emp model is returned.false if no data or connection failed</returns>
+        public bool GetEmpByName(string empName)
+        {
+            try
+            {
+                EmployeeModel model = new EmployeeModel();
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand("GetEmpByName", connection);
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@name", empName);
+                    connection.Open();
+                    SqlDataReader dr = command.ExecuteReader();
+                    if (dr.HasRows)
+                    {
+                        CustomPrint.PrintInRed($"Data for employee with name : {empName}");
+                        CustomPrint.PrintDashLine();
+                        Console.WriteLine(CustomPrint.PrintRow("Emp ID", "Emp Name", "Company ID", "Company Name", "Dept ID", "Dept Name", "Gender", "Phone No", "Address", "Start Date", "Basic Pay", "Deductions", "Taxable Pay", "Tax", "Net Pay"));
+                        CustomPrint.PrintDashLine();
+                        while (dr.Read())
+                        {
+                            model.employeeID = dr.GetInt32(0);
+                            model.employeeName = dr.GetString(1);
+                            model.companyId = dr.GetInt32(2);
+                            model.companyName = dr.GetString(3);
+                            model.departmentId = dr.GetInt32(4);
+                            model.departmentName = dr.GetString(5);
+                            model.gender = Convert.ToChar(dr.GetString(6));
+                            model.phoneNumber = dr.GetString(7);
+                            model.address = dr.GetString(8);
+                            model.startDate = dr.GetDateTime(9);
+                            model.basicPay = dr.GetDecimal(10);
+                            model.deductions = dr.GetDecimal(11);
+                            model.taxablePay = dr.GetDecimal(12);
+                            model.tax = dr.GetDecimal(13);
+                            model.netPay = dr.GetDecimal(14);
+                            Console.WriteLine(model);
+                        }
+                        CustomPrint.PrintDashLine();
+                        Console.WriteLine();
+                        return true;
+                    }
+                    CustomPrint.PrintInMagenta("No data found");
+                    connection.Close();
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                CustomPrint.PrintInMagenta(e.Message);
                 return false;
             }
         }

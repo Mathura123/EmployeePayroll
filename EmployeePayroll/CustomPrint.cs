@@ -10,7 +10,7 @@
         /// <summary>Prints the dash line</summary>
         public static void PrintDashLine()
         {
-            Console.WriteLine(new string('-', tableWidth + 4).PadLeft(tableWidth + 5));
+            Console.WriteLine(new string('-', tableWidth + 4).PadLeft(tableWidth + 5,'+').PadRight(tableWidth + 6,'+'));
         }
         /// <summary>Prints the row.</summary>
         /// <param name="columns">The values.</param>
@@ -47,6 +47,34 @@
             {
                 return text.PadRight(width - (width - text.Length) / 2).PadLeft(width);
             }
+        }
+        /// <summary>Prints the line in red.</summary>
+        /// <param name="s">The string.</param>
+        /// <param name="header">if set to <c>true</c> [header].</param>
+        /// <param name="footer">if set to <c>true</c> [footer].</param>
+        public static void PrintInRed(string s, bool header = false, bool footer = false)
+        {
+            if (header)
+                Console.WriteLine("-----------------------------------------");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(s);
+            Console.ResetColor();
+            if (footer)
+                Console.WriteLine("-----------------------------------------");
+        }
+        /// <summary>Prints the line in magenta.</summary>
+        /// <param name="s">The string.</param>
+        /// <param name="header">if set to <c>true</c> [header].</param>
+        /// <param name="footer">if set to <c>true</c> [footer].</param>
+        public static void PrintInMagenta(string s, bool header = false, bool footer = false)
+        {
+            if (header)
+                Console.WriteLine("-----------------------------------------");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine(s);
+            Console.ResetColor();
+            if (footer)
+                Console.WriteLine("-----------------------------------------");
         }
     }
 }
