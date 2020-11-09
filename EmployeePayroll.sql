@@ -216,3 +216,35 @@ update payroll set basic_pay = @BasicPay where employee_id in (select employee_i
 
 exec UpdateSalaryByName "Bill",200000;
 
+--create procedure for retriving emp by name
+CREATE PROCEDURE GetEmpByName
+(
+@name varchar(150)
+)
+AS
+select e.employee_id,name,c.company_id,company_name,d.dept_id,d.dept_name,gender,phone_no,address,start,basic_pay,deduction,taxable_pay,income_tax,net_pay 
+from company c 
+inner join employee e on c.company_id=e.company_id 
+inner join employee_department ed on ed.employee_id = e.employee_id
+inner join department d on d.dept_id= ed.dept_id
+inner join payroll p on p.employee_id = e.employee_id
+where e.name = @name
+--exec of stored procedure
+Exec GetEmpByName 'Bill';
+
+--create procedure for retriving employees in given date range
+CREATE PROCEDURE GetEmpInDateRange
+(
+@initialDate date,
+@lastDate date
+)
+AS
+select e.employee_id,name,c.company_id,company_name,d.dept_id,d.dept_name,gender,phone_no,address,start,basic_pay,deduction,taxable_pay,income_tax,net_pay 
+from company c 
+inner join employee e on c.company_id=e.company_id 
+inner join employee_department ed on ed.employee_id = e.employee_id
+inner join department d on d.dept_id= ed.dept_id
+inner join payroll p on p.employee_id = e.employee_id
+where start between @initialDate and @lastDate; 
+--exec of stored procedure
+Exec GetEmpInDateRange '12-12-1996', '11-09-2020';

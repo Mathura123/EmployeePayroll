@@ -19,9 +19,11 @@
         public decimal taxablePay { get; set; }
         public decimal tax { get; set; }
         public decimal netPay { get; set; }
+        /// <summary>Overrides to string.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
-            return CustomPrint.PrintRow(employeeID.ToString(), employeeName, companyId.ToString(), companyName, departmentId.ToString(), departmentName, gender.ToString(), phoneNumber, address, startDate.ToString(), basicPay.ToString(), deductions.ToString(), taxablePay.ToString(), tax.ToString(), netPay.ToString());
+            return CustomPrint.PrintRow(employeeID.ToString(), employeeName, companyId.ToString(), companyName, departmentId.ToString(), departmentName, gender.ToString(), phoneNumber, address, startDate.ToShortDateString(), basicPay.ToString(), deductions.ToString(), taxablePay.ToString(), tax.ToString(), netPay.ToString());
         }
     }
 

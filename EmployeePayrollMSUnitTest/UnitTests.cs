@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EmployeePayroll;
+using System;
 
 namespace EmployeePayrollMSUnitTest
 {
@@ -23,6 +24,14 @@ namespace EmployeePayrollMSUnitTest
             empModelObj.basicPay = 300000;
             EmployeeRepo empRepoObj = new EmployeeRepo();
             bool result = empRepoObj.UpdateEmployeeSalary(empModelObj);
+            Assert.AreEqual(expected, result);
+        }
+        [TestMethod]
+        public void WhenGiven_DateRange_GetEmpInDateRange_ShouldReturn_True_IfConnectionProper_And_HasRows()
+        {
+            bool expected = true;
+            EmployeeRepo empRepoObj = new EmployeeRepo();
+            bool result = empRepoObj.GetEmpInDateRange(Convert.ToDateTime("12/12/1996"), Convert.ToDateTime("12/12/2020"));
             Assert.AreEqual(expected, result);
         }
     }
