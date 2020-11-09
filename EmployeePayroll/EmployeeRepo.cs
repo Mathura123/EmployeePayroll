@@ -65,11 +65,11 @@
                             employeeModel.phoneNumber = dr.IsDBNull(7) ? " " : dr.GetString(7);
                             employeeModel.address = dr.IsDBNull(8) ? " " : dr.GetString(8);
                             employeeModel.startDate = dr.GetDateTime(9);
-                            employeeModel.basicPay = dr.GetDecimal(10);
-                            employeeModel.deductions = dr.GetDecimal(11);
-                            employeeModel.taxablePay = dr.IsDBNull(12) ? 0 : dr.GetDecimal(12);
-                            employeeModel.tax = dr.IsDBNull(13) ? 0 : dr.GetDecimal(13);
-                            employeeModel.netPay = dr.IsDBNull(14) ? 0 : dr.GetDecimal(14);
+                            employeeModel.basicPay = Math.Round(dr.GetDecimal(10),2);
+                            employeeModel.deductions = Math.Round(dr.GetDecimal(11), 2);
+                            employeeModel.taxablePay = Math.Round(dr.GetDecimal(12), 2);
+                            employeeModel.tax = Math.Round(dr.GetDecimal(10), 2);
+                            employeeModel.netPay = Math.Round(dr.GetDecimal(10), 2);
                             Console.WriteLine(employeeModel);
                         }
                         CustomPrint.PrintDashLine();
@@ -152,11 +152,11 @@
                             employeeModel.phoneNumber = dr.IsDBNull(7) ? " " : dr.GetString(7);
                             employeeModel.address = dr.IsDBNull(8) ? " " : dr.GetString(8);
                             employeeModel.startDate = dr.GetDateTime(9);
-                            employeeModel.basicPay = dr.GetDecimal(10);
-                            employeeModel.deductions = dr.GetDecimal(11);
-                            employeeModel.taxablePay = dr.IsDBNull(12) ? 0 : dr.GetDecimal(12);
-                            employeeModel.tax = dr.IsDBNull(13) ? 0 : dr.GetDecimal(13);
-                            employeeModel.netPay = dr.IsDBNull(14) ? 0 : dr.GetDecimal(14);
+                            employeeModel.basicPay = Math.Round(dr.GetDecimal(10), 2);
+                            employeeModel.deductions = Math.Round(dr.GetDecimal(11), 2);
+                            employeeModel.taxablePay = Math.Round(dr.GetDecimal(12), 2);
+                            employeeModel.tax = Math.Round(dr.GetDecimal(10), 2);
+                            employeeModel.netPay = Math.Round(dr.GetDecimal(10), 2);
                             Console.WriteLine(employeeModel);
                         }
                         CustomPrint.PrintDashLine();
@@ -209,11 +209,11 @@
                             employeeModel.phoneNumber = dr.IsDBNull(7) ? " " : dr.GetString(7);
                             employeeModel.address = dr.IsDBNull(8) ? " " : dr.GetString(8);
                             employeeModel.startDate = dr.GetDateTime(9);
-                            employeeModel.basicPay = dr.GetDecimal(10);
-                            employeeModel.deductions = dr.GetDecimal(11);
-                            employeeModel.taxablePay = dr.IsDBNull(12) ? 0 : dr.GetDecimal(12);
-                            employeeModel.tax = dr.IsDBNull(13) ? 0 : dr.GetDecimal(13);
-                            employeeModel.netPay = dr.IsDBNull(14) ? 0 : dr.GetDecimal(14);
+                            employeeModel.basicPay = Math.Round(dr.GetDecimal(10), 2);
+                            employeeModel.deductions = Math.Round(dr.GetDecimal(11), 2);
+                            employeeModel.taxablePay = Math.Round(dr.GetDecimal(12), 2);
+                            employeeModel.tax = Math.Round(dr.GetDecimal(10), 2);
+                            employeeModel.netPay = Math.Round(dr.GetDecimal(10), 2);
                             Console.WriteLine(employeeModel);
                         }
                         CustomPrint.PrintDashLine();
