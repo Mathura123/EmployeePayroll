@@ -42,5 +42,19 @@ namespace EmployeePayrollMSUnitTest
             bool result = empRepoObj.GetAggValuesOfEmpByGender();
             Assert.AreEqual(expected, result);
         }
+        [TestMethod]
+        public void WhenGiven_EmpModel_AddEmployee_ShouldReturn_True_IfConnectionProper_And_EmpAdded()
+        {
+            bool expected = true;
+            EmployeeModel empModelObj = new EmployeeModel();
+            empModelObj.employeeName = "Ruby";
+            empModelObj.companyId = 2;
+            empModelObj.address = "Dadar haveli, Pune";
+            empModelObj.phoneNumber = null;
+            empModelObj.gender = null;
+            EmployeeRepo empRepoObj = new EmployeeRepo();
+            bool result = empRepoObj.AddEmployee(empModelObj);
+            Assert.AreEqual(expected, result);
+        }
     }
 }
