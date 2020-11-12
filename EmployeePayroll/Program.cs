@@ -14,11 +14,11 @@
             EmployeeModel modelObj = new EmployeeModel();
             modelObj.companyId = 2;
             modelObj.gender = null;
-            modelObj.employeeName = "Jimmy";
+            modelObj.employeeName = "Tommy";
             modelObj.phoneNumber = null;
-            modelObj.address = "Sector 90, Noida, UP";
+            modelObj.address = null;
             modelObj.startDate = Convert.ToDateTime("12/10/1997");
-            modelObj.basicPay = 80000;
+            modelObj.basicPay = 8000;
             //empObj.UpdateEmployeeSalary(modelObj);
             empObj.GetEmpByName("Terissa");
             empObj.GetEmpInDateRange(Convert.ToDateTime("12/12/1996"), Convert.ToDateTime("12/12/2020"));

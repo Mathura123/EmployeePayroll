@@ -52,6 +52,8 @@ namespace EmployeePayrollMSUnitTest
             empModelObj.address = "Dadar haveli, Pune";
             empModelObj.phoneNumber = null;
             empModelObj.gender = null;
+            empModelObj.startDate = DateTime.Now;
+            empModelObj.basicPay = 90000;
             EmployeeRepo empRepoObj = new EmployeeRepo();
             bool result = empRepoObj.AddEmployee(empModelObj);
             Assert.AreEqual(expected, result);

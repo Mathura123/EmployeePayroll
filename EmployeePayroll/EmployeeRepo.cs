@@ -63,7 +63,7 @@
                             employeeModel.phoneNumber = dr.IsDBNull(7) ? " " : dr.GetString(7);
                             employeeModel.address = dr.IsDBNull(8) ? " " : dr.GetString(8);
                             employeeModel.startDate = dr.GetDateTime(9);
-                            employeeModel.basicPay = Math.Round(dr.GetDecimal(10),2);
+                            employeeModel.basicPay = Math.Round(dr.GetDecimal(10), 2);
                             employeeModel.deductions = Math.Round(dr.GetDecimal(11), 2);
                             employeeModel.taxablePay = Math.Round(dr.GetDecimal(12), 2);
                             employeeModel.tax = Math.Round(dr.GetDecimal(10), 2);
@@ -278,45 +278,54 @@
         public bool AddEmployee(EmployeeModel empModel)
         {
             int id = default(int);
-            try
+            SqlTransaction objTrans = null;
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                if (empModel.companyId.Equals(default(int)))
-                    throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.NO_COMPANY_ID, "No company id given");
-                if (empModel.employeeName.Equals(default(string)))
-                    throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.NO_EMP_NAME, "No employee name given");
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                try
                 {
-                    SqlCommand command = new SqlCommand(@"insert into employee values ('" +
-                                                empModel.companyId+ "','" + empModel.employeeName + "','" +
-                                               empModel.gender + "','" + empModel.phoneNumber + "','"+ empModel.address +"'); " +
-                                               "Select @@identity", connection);
-                    connection.Open();
-                    id = Convert.ToInt32(command.ExecuteScalar());
-                    connection.Close();
+                    if (empModel.companyId.Equals(default(int)))
+                        throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.NO_COMPANY_ID, "No company id given");
+                    if (empModel.employeeName.Equals(default(string)))
+                        throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.NO_EMP_NAME, "No employee name given");
                 }
-            }
-            catch (Exception e)
-            {
-                CustomPrint.PrintInMagenta(e.Message);
-            }
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                catch(EmployeePayrollException e)
                 {
-                    SqlCommand command = new SqlCommand(@"Insert into payroll values ('"+id +"','"+empModel.startDate+"','"+empModel.basicPay+"');", connection);
-                    connection.Open();
-                    var result = command.ExecuteNonQuery();
-                    connection.Close();
-                    CustomPrint.PrintInRed($"{result} rows affected");
-                    if(result==0)
+                    CustomPrint.PrintInMagenta(e.Message);
                     return false;
+                }
+                try
+                { 
+                    connection.Open();
+                    objTrans = connection.BeginTransaction();
+                    SqlCommand command1 = new SqlCommand($"insert into employee values " +
+                        $"({empModel.companyId},'{empModel.employeeName}','{empModel.gender}','{empModel.phoneNumber}','{empModel.address}'); " +
+                                               "Select @@identity", connection, objTrans);
+                    id = Convert.ToInt32(command1.ExecuteScalar());
+                    SqlCommand command2 = new SqlCommand($"insert into payroll values " +
+                        $"({id},'{empModel.startDate.ToString("yyyy-MM-dd")}',{empModel.basicPay});", connection, objTrans);
+                    var result = command2.ExecuteNonQuery();
+                    objTrans.Commit();
+                    CustomPrint.PrintInRed($"{result} rows affected");
+                    if (result == 0)
+                        throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.WRONG_EMP_DETAILS, "Incorrect Employee Details");
                     return true;
                 }
-            }
-            catch (Exception e)
-            {
-                CustomPrint.PrintInMagenta(e.Message);
-                return false;
+                catch (EmployeePayrollException e)
+                {
+                    CustomPrint.PrintInMagenta(e.Message);
+                    objTrans.Rollback();
+                    return false;
+                }
+                catch (Exception e)
+                {
+                    CustomPrint.PrintInMagenta(e.Message);
+                    objTrans.Rollback();
+                    return false;
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
     }
