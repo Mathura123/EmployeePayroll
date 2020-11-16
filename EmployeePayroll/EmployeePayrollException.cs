@@ -8,10 +8,12 @@ namespace EmployeePayroll
     {
         public enum ExceptionType
         {
-            NO_COMPANY_ID,
+            COMPANY_NOT_FOUND,
+            DEPT_NOT_FOUND,
             NO_EMP_NAME,
             WRONG_EMP_DETAILS,
-            DEPT_NOT_FOUND
+            INVALID_DATE,
+            EMP_ALREADY_ADDED
         }
         private ExceptionType type;
         public EmployeePayrollException(ExceptionType type, string message) : base(message)

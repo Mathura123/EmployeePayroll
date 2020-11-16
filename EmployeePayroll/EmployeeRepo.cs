@@ -54,22 +54,7 @@
                         CustomPrint.PrintDashLine();
                         while (dr.Read())
                         {
-                            employeeModel.employeeID = dr.GetInt32(0);
-                            employeeModel.employeeName = dr.GetString(1);
-                            employeeModel.companyId = dr.GetInt32(2);
-                            employeeModel.companyName = dr.GetString(3);
-                            employeeModel.departmentId = new int[] { dr.GetInt32(4) };
-                            employeeModel.departmentName = new string[] { dr.GetString(5) };
-                            employeeModel.gender = String.IsNullOrEmpty(dr.GetString(6)) ? ' ' : Convert.ToChar(dr.GetString(6));
-                            employeeModel.phoneNumber = dr.IsDBNull(7) ? " " : dr.GetString(7);
-                            employeeModel.address = dr.IsDBNull(8) ? " " : dr.GetString(8);
-                            employeeModel.startDate = dr.GetDateTime(9);
-                            employeeModel.basicPay = Math.Round(dr.GetDecimal(10), 2);
-                            employeeModel.deductions = Math.Round(dr.GetDecimal(11), 2);
-                            employeeModel.taxablePay = Math.Round(dr.GetDecimal(12), 2);
-                            employeeModel.tax = Math.Round(dr.GetDecimal(10), 2);
-                            employeeModel.netPay = Math.Round(dr.GetDecimal(10), 2);
-                            Console.WriteLine(employeeModel);
+                            GetDetailsFromSqlDataReader(dr, employeeModel);
                         }
                         CustomPrint.PrintDashLine();
                         Console.WriteLine();
@@ -141,22 +126,7 @@
                         CustomPrint.PrintDashLine();
                         while (dr.Read())
                         {
-                            employeeModel.employeeID = dr.GetInt32(0);
-                            employeeModel.employeeName = dr.GetString(1);
-                            employeeModel.companyId = dr.GetInt32(2);
-                            employeeModel.companyName = dr.GetString(3);
-                            employeeModel.departmentId = new int[] { dr.GetInt32(4) };
-                            employeeModel.departmentName = new string[] { dr.GetString(5) };
-                            employeeModel.gender = String.IsNullOrEmpty(dr.GetString(6)) ? ' ' : Convert.ToChar(dr.GetString(6));
-                            employeeModel.phoneNumber = dr.IsDBNull(7) ? " " : dr.GetString(7);
-                            employeeModel.address = dr.IsDBNull(8) ? " " : dr.GetString(8);
-                            employeeModel.startDate = dr.GetDateTime(9);
-                            employeeModel.basicPay = Math.Round(dr.GetDecimal(10), 2);
-                            employeeModel.deductions = Math.Round(dr.GetDecimal(11), 2);
-                            employeeModel.taxablePay = Math.Round(dr.GetDecimal(12), 2);
-                            employeeModel.tax = Math.Round(dr.GetDecimal(10), 2);
-                            employeeModel.netPay = Math.Round(dr.GetDecimal(10), 2);
-                            Console.WriteLine(employeeModel);
+                            GetDetailsFromSqlDataReader(dr, employeeModel);
                         }
                         CustomPrint.PrintDashLine();
                         Console.WriteLine();
@@ -198,22 +168,7 @@
                         CustomPrint.PrintDashLine();
                         while (dr.Read())
                         {
-                            employeeModel.employeeID = dr.GetInt32(0);
-                            employeeModel.employeeName = dr.GetString(1);
-                            employeeModel.companyId = dr.GetInt32(2);
-                            employeeModel.companyName = dr.GetString(3);
-                            employeeModel.departmentId = new int[] { dr.GetInt32(4) };
-                            employeeModel.departmentName = new string[] { dr.GetString(5) };
-                            employeeModel.gender = String.IsNullOrEmpty(dr.GetString(6)) ? ' ' : Convert.ToChar(dr.GetString(6));
-                            employeeModel.phoneNumber = dr.IsDBNull(7) ? " " : dr.GetString(7);
-                            employeeModel.address = dr.IsDBNull(8) ? " " : dr.GetString(8);
-                            employeeModel.startDate = dr.GetDateTime(9);
-                            employeeModel.basicPay = Math.Round(dr.GetDecimal(10), 2);
-                            employeeModel.deductions = Math.Round(dr.GetDecimal(11), 2);
-                            employeeModel.taxablePay = Math.Round(dr.GetDecimal(12), 2);
-                            employeeModel.tax = Math.Round(dr.GetDecimal(10), 2);
-                            employeeModel.netPay = Math.Round(dr.GetDecimal(10), 2);
-                            Console.WriteLine(employeeModel);
+                            GetDetailsFromSqlDataReader(dr, employeeModel);
                         }
                         CustomPrint.PrintDashLine();
                         Console.WriteLine();
@@ -282,8 +237,7 @@
             SqlTransaction objTrans = null;
             try
             {
-                if (empModel.companyId.Equals(default(int)))
-                    throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.NO_COMPANY_ID, "No company id given");
+                empModel.companyId = GetCompanyId(empModel.companyName);
                 if (empModel.employeeName.Equals(default(string)))
                     throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.NO_EMP_NAME, "No employee name given");
             }
@@ -292,44 +246,50 @@
                 CustomPrint.PrintInMagenta(e.Message);
                 return false;
             }
-            List<int> deptIds = GetDeptId(empModel.departmentName);
-            foreach (int deptId in deptIds)
+            empModel.departmentId = GetDeptId(empModel.departmentName).ToArray();
+            int iteration = 0;
+            foreach (int deptId in empModel.departmentId)
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                if (!SearchDublicates(empModel.employeeName,empModel.companyName,empModel.departmentName[iteration]))
                 {
-                    try
+                    using (SqlConnection connection = new SqlConnection(connectionString))
                     {
-                        connection.Open();
-                        objTrans = connection.BeginTransaction();
-                        SqlCommand command1 = new SqlCommand($"insert into employee values " +
-                            $"({empModel.companyId},'{empModel.employeeName}','{empModel.gender}','{empModel.phoneNumber}','{empModel.address}'); " +
-                                                   "Select @@identity", connection, objTrans);
-                        id = Convert.ToInt32(command1.ExecuteScalar());
-                        SqlCommand command2 = new SqlCommand($"insert into payroll values " +
-                            $"({id},'{empModel.startDate.ToString("yyyy-MM-dd")}',{empModel.basicPay});", connection, objTrans);
-                        var row = command2.ExecuteNonQuery();
-                        SqlCommand command3 = new SqlCommand($"insert into employee_department values " +
-                           $"({id},{deptId});", connection, objTrans);
-                        var row2 = command3.ExecuteNonQuery();
-                        objTrans.Commit();
-                        CustomPrint.PrintInRed($"{row2} row affected");
-                        if (row2 == 0)
-                            throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.WRONG_EMP_DETAILS, "Incorrect Employee Details");
-                    }
-                    catch (Exception e)
-                    {
-                        CustomPrint.PrintInMagenta(e.Message);
-                        objTrans.Rollback();
-                        return false;
-                    }
-                    finally
-                    {
-                        connection.Close();
+                        try
+                        {
+                            connection.Open();
+                            objTrans = connection.BeginTransaction();
+                            SqlCommand command1 = new SqlCommand($"insert into employee values " +
+                                $"({empModel.companyId},'{empModel.employeeName}','{empModel.gender}','{empModel.phoneNumber}','{empModel.address}'); " +
+                                                       "Select @@identity", connection, objTrans);
+                            id = Convert.ToInt32(command1.ExecuteScalar());
+                            SqlCommand command2 = new SqlCommand($"insert into payroll values " +
+                                $"({id},'{empModel.startDate.ToString("yyyy-MM-dd")}',{empModel.basicPay});", connection, objTrans);
+                            var row = command2.ExecuteNonQuery();
+                            SqlCommand command3 = new SqlCommand($"insert into employee_department values " +
+                               $"({id},{deptId});", connection, objTrans);
+                            var row2 = command3.ExecuteNonQuery();
+                            objTrans.Commit();
+                            CustomPrint.PrintInRed($"{row2} row affected");
+                            if (row2 == 0)
+                                throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.WRONG_EMP_DETAILS, "Incorrect Employee Details");
+                        }
+                        catch (Exception e)
+                        {
+                            CustomPrint.PrintInMagenta(e.Message);
+                            objTrans.Rollback();
+                            return false;
+                        }
+                        finally
+                        {
+                            connection.Close();
+                        }
                     }
                 }
+                iteration++;
             }
             return true;
         }
+
         /// <summary>Gets the dept identifier.</summary>
         /// <param name="deptName">Name of the dept.</param>
         /// <returns>DeptId</returns>
@@ -352,7 +312,7 @@
                             deptId = dr.GetInt32(0);
                         }
                         if (deptId == 0)
-                            throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.DEPT_NOT_FOUND, "Dept Not Found");
+                            throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.DEPT_NOT_FOUND, $"Dept {deptName} Not Found");
                         deptIds.Add(deptId);
                     }
                     catch (Exception e)
@@ -366,6 +326,92 @@
                 }
             }
             return deptIds;
+        }
+        /// <summary>Gets the company identifier.</summary>
+        /// <param name="companyName">Name of the company.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        /// <exception cref="EmployeePayrollException">Company Not Found</exception>
+        private int GetCompanyId(string companyName)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand command1 = new SqlCommand($"select company_id from company where company_name = '{companyName}'", connection);
+                    SqlDataReader dr = command1.ExecuteReader();
+                    int companyId = 0;
+                    while (dr.Read())
+                    {
+                        companyId = dr.GetInt32(0);
+                    }
+                    if (companyId == 0)
+                        throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.COMPANY_NOT_FOUND, $"Company {companyName} Not Found");
+                    return companyId;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+        /// <summary>Searches the dublicates.</summary>
+        /// <param name="empName">Name of the emp.</param>
+        /// <param name="empCompanyName">Name of the emp company.</param>
+        /// <param name="deptId">The dept identifier.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        /// <exception cref="EmployeePayrollException">Employee is already added</exception>
+        private bool SearchDublicates(string empName, string empCompanyName, string deptName)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand($"select * from company c " +
+                        $"inner join employee e on c.company_id = e.company_id " +
+                        $"inner join employee_department ed on ed.employee_id = e.employee_id " +
+                        $"inner join department d on d.dept_id = ed.dept_id " +
+                        $"inner join payroll p on p.employee_id = e.employee_id " +
+                        $"where e.name = '{empName}' and c.company_name = '{empCompanyName}' and d.dept_name = '{deptName}'", connection);
+                    SqlDataReader dr = command.ExecuteReader();
+                    if (dr.HasRows)
+                        throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.EMP_ALREADY_ADDED, $"Employee is already added in dept {deptName}");
+                    return false;
+                }
+                catch(Exception e)
+                {
+                    CustomPrint.PrintInMagenta(e.Message);
+                    return true;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+        private void GetDetailsFromSqlDataReader(SqlDataReader dr,EmployeeModel employeeModel)
+        {
+            employeeModel.employeeID = dr.GetInt32(0);
+            employeeModel.employeeName = dr.GetString(1);
+            employeeModel.companyId = dr.GetInt32(2);
+            employeeModel.companyName = dr.GetString(3);
+            employeeModel.departmentId = new int[] { dr.GetInt32(4) };
+            employeeModel.departmentName = new string[] { dr.GetString(5) };
+            employeeModel.gender = String.IsNullOrEmpty(dr.GetString(6)) ? ' ' : Convert.ToChar(dr.GetString(6));
+            employeeModel.phoneNumber = dr.IsDBNull(7) ? " " : dr.GetString(7);
+            employeeModel.address = dr.IsDBNull(8) ? " " : dr.GetString(8);
+            employeeModel.startDate = dr.GetDateTime(9);
+            employeeModel.basicPay = Math.Round(dr.GetDecimal(10), 2);
+            employeeModel.deductions = Math.Round(dr.GetDecimal(11), 2);
+            employeeModel.taxablePay = Math.Round(dr.GetDecimal(12), 2);
+            employeeModel.tax = Math.Round(dr.GetDecimal(10), 2);
+            employeeModel.netPay = Math.Round(dr.GetDecimal(10), 2);
+            Console.WriteLine(employeeModel);
         }
     }
 }

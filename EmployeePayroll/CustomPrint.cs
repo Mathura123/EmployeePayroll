@@ -66,7 +66,7 @@
         /// <param name="s">The string.</param>
         /// <param name="header">if set to <c>true</c> [header].</param>
         /// <param name="footer">if set to <c>true</c> [footer].</param>
-        public static void PrintInMagenta(string s, bool header = false, bool footer = false)
+        public static void PrintInMagenta(string s, bool header = false, bool footer = true)
         {
             if (header)
                 Console.WriteLine("-----------------------------------------");
