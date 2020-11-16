@@ -10,7 +10,8 @@ namespace EmployeePayroll
         {
             NO_COMPANY_ID,
             NO_EMP_NAME,
-            WRONG_EMP_DETAILS
+            WRONG_EMP_DETAILS,
+            DEPT_NOT_FOUND
         }
         private ExceptionType type;
         public EmployeePayrollException(ExceptionType type, string message) : base(message)

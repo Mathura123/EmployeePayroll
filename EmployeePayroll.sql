@@ -312,3 +312,13 @@ ON DELETE CASCADE;
 ALTER TABLE employee_department
 add CONSTRAINT FKey_Emp_EmpDept FOREIGN KEY(employee_id) REFERENCES employee(employee_id)
 ON DELETE CASCADE;
+
+delete from employee where name = 'tom'
+select * from employee
+select * from payroll
+select * from department
+select * from employee_department
+
+select dept_id from department where dept_name = 'Marketing'
+
+exec SelectAllRowsFromEmployeePayroll

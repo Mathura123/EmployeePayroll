@@ -1,6 +1,7 @@
 ﻿namespace EmployeePayroll
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.SqlClient;
 
     public class EmployeeRepo
@@ -57,9 +58,9 @@
                             employeeModel.employeeName = dr.GetString(1);
                             employeeModel.companyId = dr.GetInt32(2);
                             employeeModel.companyName = dr.GetString(3);
-                            employeeModel.departmentId = dr.GetInt32(4);
-                            employeeModel.departmentName = dr.GetString(5);
-                            employeeModel.gender = dr.IsDBNull(6) ? ' ' : Convert.ToChar(dr.GetString(6));
+                            employeeModel.departmentId = new int[] { dr.GetInt32(4) };
+                            employeeModel.departmentName = new string[] { dr.GetString(5) };
+                            employeeModel.gender = String.IsNullOrEmpty(dr.GetString(6)) ? ' ' : Convert.ToChar(dr.GetString(6));
                             employeeModel.phoneNumber = dr.IsDBNull(7) ? " " : dr.GetString(7);
                             employeeModel.address = dr.IsDBNull(8) ? " " : dr.GetString(8);
                             employeeModel.startDate = dr.GetDateTime(9);
@@ -144,9 +145,9 @@
                             employeeModel.employeeName = dr.GetString(1);
                             employeeModel.companyId = dr.GetInt32(2);
                             employeeModel.companyName = dr.GetString(3);
-                            employeeModel.departmentId = dr.GetInt32(4);
-                            employeeModel.departmentName = dr.GetString(5);
-                            employeeModel.gender = dr.IsDBNull(6) ? ' ' : Convert.ToChar(dr.GetString(6));
+                            employeeModel.departmentId = new int[] { dr.GetInt32(4) };
+                            employeeModel.departmentName = new string[] { dr.GetString(5) };
+                            employeeModel.gender = String.IsNullOrEmpty(dr.GetString(6)) ? ' ' : Convert.ToChar(dr.GetString(6));
                             employeeModel.phoneNumber = dr.IsDBNull(7) ? " " : dr.GetString(7);
                             employeeModel.address = dr.IsDBNull(8) ? " " : dr.GetString(8);
                             employeeModel.startDate = dr.GetDateTime(9);
@@ -201,9 +202,9 @@
                             employeeModel.employeeName = dr.GetString(1);
                             employeeModel.companyId = dr.GetInt32(2);
                             employeeModel.companyName = dr.GetString(3);
-                            employeeModel.departmentId = dr.GetInt32(4);
-                            employeeModel.departmentName = dr.GetString(5);
-                            employeeModel.gender = dr.IsDBNull(6) ? ' ' : Convert.ToChar(dr.GetString(6));
+                            employeeModel.departmentId = new int[] { dr.GetInt32(4) };
+                            employeeModel.departmentName = new string[] { dr.GetString(5) };
+                            employeeModel.gender = String.IsNullOrEmpty(dr.GetString(6)) ? ' ' : Convert.ToChar(dr.GetString(6));
                             employeeModel.phoneNumber = dr.IsDBNull(7) ? " " : dr.GetString(7);
                             employeeModel.address = dr.IsDBNull(8) ? " " : dr.GetString(8);
                             employeeModel.startDate = dr.GetDateTime(9);
@@ -279,54 +280,92 @@
         {
             int id = default(int);
             SqlTransaction objTrans = null;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                try
+                if (empModel.companyId.Equals(default(int)))
+                    throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.NO_COMPANY_ID, "No company id given");
+                if (empModel.employeeName.Equals(default(string)))
+                    throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.NO_EMP_NAME, "No employee name given");
+            }
+            catch (EmployeePayrollException e)
+            {
+                CustomPrint.PrintInMagenta(e.Message);
+                return false;
+            }
+            List<int> deptIds = GetDeptId(empModel.departmentName);
+            foreach (int deptId in deptIds)
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    if (empModel.companyId.Equals(default(int)))
-                        throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.NO_COMPANY_ID, "No company id given");
-                    if (empModel.employeeName.Equals(default(string)))
-                        throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.NO_EMP_NAME, "No employee name given");
-                }
-                catch(EmployeePayrollException e)
-                {
-                    CustomPrint.PrintInMagenta(e.Message);
-                    return false;
-                }
-                try
-                { 
-                    connection.Open();
-                    objTrans = connection.BeginTransaction();
-                    SqlCommand command1 = new SqlCommand($"insert into employee values " +
-                        $"({empModel.companyId},'{empModel.employeeName}','{empModel.gender}','{empModel.phoneNumber}','{empModel.address}'); " +
-                                               "Select @@identity", connection, objTrans);
-                    id = Convert.ToInt32(command1.ExecuteScalar());
-                    SqlCommand command2 = new SqlCommand($"insert into payroll values " +
-                        $"({id},'{empModel.startDate.ToString("yyyy-MM-dd")}',{empModel.basicPay});", connection, objTrans);
-                    var result = command2.ExecuteNonQuery();
-                    objTrans.Commit();
-                    CustomPrint.PrintInRed($"{result} rows affected");
-                    if (result == 0)
-                        throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.WRONG_EMP_DETAILS, "Incorrect Employee Details");
-                    return true;
-                }
-                catch (EmployeePayrollException e)
-                {
-                    CustomPrint.PrintInMagenta(e.Message);
-                    objTrans.Rollback();
-                    return false;
-                }
-                catch (Exception e)
-                {
-                    CustomPrint.PrintInMagenta(e.Message);
-                    objTrans.Rollback();
-                    return false;
-                }
-                finally
-                {
-                    connection.Close();
+                    try
+                    {
+                        connection.Open();
+                        objTrans = connection.BeginTransaction();
+                        SqlCommand command1 = new SqlCommand($"insert into employee values " +
+                            $"({empModel.companyId},'{empModel.employeeName}','{empModel.gender}','{empModel.phoneNumber}','{empModel.address}'); " +
+                                                   "Select @@identity", connection, objTrans);
+                        id = Convert.ToInt32(command1.ExecuteScalar());
+                        SqlCommand command2 = new SqlCommand($"insert into payroll values " +
+                            $"({id},'{empModel.startDate.ToString("yyyy-MM-dd")}',{empModel.basicPay});", connection, objTrans);
+                        var row = command2.ExecuteNonQuery();
+                        SqlCommand command3 = new SqlCommand($"insert into employee_department values " +
+                           $"({id},{deptId});", connection, objTrans);
+                        var row2 = command3.ExecuteNonQuery();
+                        objTrans.Commit();
+                        CustomPrint.PrintInRed($"{row2} row affected");
+                        if (row2 == 0)
+                            throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.WRONG_EMP_DETAILS, "Incorrect Employee Details");
+                    }
+                    catch (Exception e)
+                    {
+                        CustomPrint.PrintInMagenta(e.Message);
+                        objTrans.Rollback();
+                        return false;
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
                 }
             }
+            return true;
+        }
+        /// <summary>Gets the dept identifier.</summary>
+        /// <param name="deptName">Name of the dept.</param>
+        /// <returns>DeptId</returns>
+        /// <exception cref="EmployeePayrollException">Dept Not Found</exception>
+        private List<int> GetDeptId(string[] deptNames)
+        {
+            List<int> deptIds = new List<int>();
+            foreach (string deptName in deptNames)
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    try
+                    {
+                        connection.Open();
+                        SqlCommand command1 = new SqlCommand($"select dept_id from department where dept_name = '{deptName}'", connection);
+                        SqlDataReader dr = command1.ExecuteReader();
+                        int deptId = 0;
+                        while (dr.Read())
+                        {
+                            deptId = dr.GetInt32(0);
+                        }
+                        if (deptId == 0)
+                            throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.DEPT_NOT_FOUND, "Dept Not Found");
+                        deptIds.Add(deptId);
+                    }
+                    catch (Exception e)
+                    {
+                        CustomPrint.PrintInMagenta(e.Message);
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+                }
+            }
+            return deptIds;
         }
     }
 }
