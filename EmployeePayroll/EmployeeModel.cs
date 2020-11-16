@@ -10,7 +10,7 @@
         public string companyName { get; set; }
         public int[] departmentId { get; set; }
         public string[] departmentName { get; set; }
-        public char? gender { get; set; } = ' ';
+        public string gender { get; set; }
         public string phoneNumber { get; set; }
         public string address { get; set; }
         public DateTime startDate { get; set; }

@@ -402,7 +402,7 @@
             employeeModel.companyName = dr.GetString(3);
             employeeModel.departmentId = new int[] { dr.GetInt32(4) };
             employeeModel.departmentName = new string[] { dr.GetString(5) };
-            employeeModel.gender = String.IsNullOrEmpty(dr.GetString(6)) ? ' ' : Convert.ToChar(dr.GetString(6));
+            employeeModel.gender = dr.IsDBNull(6) ? " " : dr.GetString(6);
             employeeModel.phoneNumber = dr.IsDBNull(7) ? " " : dr.GetString(7);
             employeeModel.address = dr.IsDBNull(8) ? " " : dr.GetString(8);
             employeeModel.startDate = dr.GetDateTime(9);

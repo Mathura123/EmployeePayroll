@@ -82,31 +82,55 @@
         }
         private static EmployeeModel AskEmployeeDetailsToAdd()
         {
+            EmployeeModel objEmpModel = new EmployeeModel();
+            Console.Write("Enter the Employee Name : ");
+            objEmpModel.employeeName = Console.ReadLine();
+            Console.Write("Enter the Company Name : ");
+            objEmpModel.companyName = Console.ReadLine();
+            Console.Write("Enter departments names separated by commas(Eg. Marketing,HR) : ");
+            objEmpModel.departmentName = Console.ReadLine().Split(',');
+        label1:
+            Console.Write("Enter the gender : ");
+            string gender = Console.ReadLine();
             try
             {
-                EmployeeModel objEmpModel = new EmployeeModel();
-                Console.Write("Enter the Employee Name : ");
-                objEmpModel.employeeName = Console.ReadLine();
-                Console.Write("Enter the Company Name : ");
-                objEmpModel.companyName = Console.ReadLine();
-                Console.Write("Enter departments names separated by commas(Eg. Marketing,HR) : ");
-                objEmpModel.departmentName = Console.ReadLine().Split(',');
-                Console.Write("Enter the gender : ");
-                objEmpModel.gender = Convert.ToChar(Console.ReadLine());
-                Console.Write("Enter the Phone Number : ");
-                objEmpModel.phoneNumber = Console.ReadLine();
-                Console.Write("Enter the address : ");
-                objEmpModel.address = Console.ReadLine();
-                Console.Write("Enter the start date in DD/MM/YYYY format : ");
-                objEmpModel.startDate = Convert.ToDateTime(Console.ReadLine());
-                Console.Write("Enter the basic pay : ");
-                objEmpModel.basicPay = Convert.ToDecimal(Console.ReadLine());
-                return objEmpModel;
+                if (EmpDetailsRegexValidatation.ValidateGender(gender))
+                    objEmpModel.gender = gender.ToUpper();
             }
-            catch
+            catch (Exception e)
             {
-                throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.WRONG_EMP_DETAILS, "Wrong details");
+                CustomPrint.PrintInMagenta(e.Message);
+                goto label1;
             }
+        label2:
+            Console.Write("Enter the Phone Number : ");
+            string phoneNumber = Console.ReadLine();
+            try
+            {
+                if (EmpDetailsRegexValidatation.ValidatePhoneNo(phoneNumber))
+                    objEmpModel.phoneNumber = phoneNumber;
+            }
+            catch (Exception e)
+            {
+                CustomPrint.PrintInMagenta(e.Message);
+                goto label2;
+            }
+            Console.Write("Enter the address : ");
+            objEmpModel.address = Console.ReadLine();
+        label3:
+            Console.Write("Enter the start date in DD/MM/YYYY format : ");
+            try
+            {
+                objEmpModel.startDate = Convert.ToDateTime(Console.ReadLine());
+            }
+            catch (Exception e)
+            {
+                CustomPrint.PrintInMagenta(e.Message);
+                goto label3;
+            }
+            Console.Write("Enter the basic pay : ");
+            objEmpModel.basicPay = Convert.ToDecimal(Console.ReadLine());
+            return objEmpModel;
         }
         private static EmployeeModel AskDetailsToUpdate()
         {

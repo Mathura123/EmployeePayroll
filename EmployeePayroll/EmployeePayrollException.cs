@@ -13,7 +13,9 @@ namespace EmployeePayroll
             NO_EMP_NAME,
             WRONG_EMP_DETAILS,
             INVALID_DATE,
-            EMP_ALREADY_ADDED
+            EMP_ALREADY_ADDED,
+            INVALID_PHONE_NO,
+            INVALID_GENDER
         }
         private ExceptionType type;
         public EmployeePayrollException(ExceptionType type, string message) : base(message)
