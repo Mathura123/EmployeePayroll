@@ -12,7 +12,8 @@
                 "Enter 4 : Get Aggregate Values by gender\n" +
                 "Enter 5 : Update Employee salary\n" +
                 "Enter 6 : Add an Employee\n" +
-                "Enter 7 : Exit");
+                "Enter 7 : Delete an Employee\n" +
+                "Enter 8 : Exit");
             try
             {
                 Console.Write("Your Entry : ");
@@ -53,6 +54,11 @@
                     break;
                 case 6:
                     empObj.AddEmployee(AskEmployeeDetailsToAdd());
+                    AskOptions();
+                    break;
+                case 7:
+                    EmployeeModel objModel = AskDetailsToDelete();
+                    empObj.DeleteEmployee(objModel.employeeName, objModel.companyName, objModel.departmentName);
                     AskOptions();
                     break;
                 default:
@@ -147,6 +153,17 @@
             {
                 throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.WRONG_EMP_DETAILS, "Wrong details");
             }
+        }
+        private static EmployeeModel AskDetailsToDelete()
+        {
+            EmployeeModel objEmpModel = new EmployeeModel();
+            Console.Write("Enter the Employee Name : ");
+            objEmpModel.employeeName = Console.ReadLine();
+            Console.Write("Enter the Company Name : ");
+            objEmpModel.companyName = Console.ReadLine();
+            Console.Write("Enter departments names separated by commas(Eg. Marketing,HR) : ");
+            objEmpModel.departmentName = Console.ReadLine().Split(',');
+            return objEmpModel;
         }
     }
 }

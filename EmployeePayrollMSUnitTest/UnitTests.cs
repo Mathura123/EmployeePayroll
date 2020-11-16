@@ -48,7 +48,7 @@ namespace EmployeePayrollMSUnitTest
             bool expected = true;
             EmployeeModel empModelObj = new EmployeeModel();
             empModelObj.employeeName = "Ruby";
-            empModelObj.companyId = 2;
+            empModelObj.companyName = "Company2";
             empModelObj.address = "Dadar haveli, Pune";
             empModelObj.phoneNumber = null;
             empModelObj.gender = null;
@@ -56,6 +56,18 @@ namespace EmployeePayrollMSUnitTest
             empModelObj.basicPay = 90000;
             EmployeeRepo empRepoObj = new EmployeeRepo();
             bool result = empRepoObj.AddEmployee(empModelObj);
+            Assert.AreEqual(expected, result);
+        }
+        [TestMethod]
+        public void WhenGiven_EmpNameCompanyNameDeptName_DeleteEmployee_ShouldReturn_True_IfConnectionProper_And_EmpDeleted()
+        {
+            bool expected = true;
+            EmployeeModel objModel = new EmployeeModel();
+            objModel.employeeName = "Terissa";
+            objModel.companyName = "Company1";
+            objModel.departmentName = new string[] { "Sales","HR","hj" };
+            EmployeeRepo objRepo = new EmployeeRepo();
+            bool result = objRepo.DeleteEmployee(objModel.employeeName, objModel.companyName, objModel.departmentName);
             Assert.AreEqual(expected, result);
         }
     }
