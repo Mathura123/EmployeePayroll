@@ -254,27 +254,9 @@
                     connection.Open();
                     objTrans = connection.BeginTransaction();
                     if (!SearchDublicatesInCompany(empModel.employeeName, empModel.companyName))
-                    {
-                        SqlCommand command1 = new SqlCommand($"insert into employee values " +
-                            $"({empModel.companyId},'{empModel.employeeName}','{empModel.gender}','{empModel.phoneNumber}','{empModel.address}'); " +
-                                                   "Select @@identity", connection, objTrans);
-                        id = Convert.ToInt32(command1.ExecuteScalar());
-                        SqlCommand command2 = new SqlCommand($"insert into payroll values " +
-                            $"({id},'{empModel.startDate.ToString("yyyy-MM-dd")}',{empModel.basicPay});", connection, objTrans);
-                        var row = command2.ExecuteNonQuery();
-                    }
+                        AddEmployeeIfNoCompanyDublicate(empModel, connection, objTrans, ref id);
                     else
-                    {
-                        SqlCommand command = new SqlCommand($"select employee_id from employee " +
-                            $"where name = '{empModel.employeeName}' and " +
-                            $"employee.company_id in (select company_id from company where company_name = '{empModel.companyName}')", connection, objTrans);
-                        SqlDataReader dr = command.ExecuteReader();
-                        while (dr.Read())
-                        {
-                            id = dr.GetInt32(0);
-                        }
-                        dr.Close();
-                    }
+                        GetEmpIdIfCompanyDublicate(empModel, connection, objTrans, ref id);
                     try
                     {
                         int row2 = 0;
@@ -496,6 +478,28 @@
             employeeModel.tax = Math.Round(dr.GetDecimal(10), 2);
             employeeModel.netPay = Math.Round(dr.GetDecimal(10), 2);
             Console.WriteLine(employeeModel);
+        }
+        private void AddEmployeeIfNoCompanyDublicate(EmployeeModel empModel,SqlConnection connection, SqlTransaction objTrans, ref int id)
+        {
+            SqlCommand command1 = new SqlCommand($"insert into employee values " +
+                            $"({empModel.companyId},'{empModel.employeeName}','{empModel.gender}','{empModel.phoneNumber}','{empModel.address}'); " +
+                                                   "Select @@identity", connection, objTrans);
+            id = Convert.ToInt32(command1.ExecuteScalar());
+            SqlCommand command2 = new SqlCommand($"insert into payroll values " +
+                $"({id},'{empModel.startDate.ToString("yyyy-MM-dd")}',{empModel.basicPay});", connection, objTrans);
+            var row = command2.ExecuteNonQuery();
+        }
+        private void GetEmpIdIfCompanyDublicate(EmployeeModel empModel, SqlConnection connection, SqlTransaction objTrans, ref int id)
+        {
+            SqlCommand command = new SqlCommand($"select employee_id from employee " +
+                            $"where name = '{empModel.employeeName}' and " +
+                            $"employee.company_id in (select company_id from company where company_name = '{empModel.companyName}')", connection, objTrans);
+            SqlDataReader dr = command.ExecuteReader();
+            while (dr.Read())
+            {
+                id = dr.GetInt32(0);
+            }
+            dr.Close();
         }
     }
 }
