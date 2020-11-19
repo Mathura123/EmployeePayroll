@@ -106,5 +106,22 @@ namespace EmployeePayrollMSUnitTest
             DateTime stopDateTime = DateTime.Now;
             Console.WriteLine("Duration with thread: " + (startDateTime - stopDateTime));
         }
+        [TestMethod]
+        public void WhenGiven_EmpModelList_To_UpdateMultipleEmployeeSalary_Should_UpadteSalary_For_MultipleEmp()
+        {
+            List<EmployeeModel> empModelList = new List<EmployeeModel>
+            {
+                new EmployeeModel(){ employeeName ="Hardy",basicPay= 20000},
+                new EmployeeModel(){ employeeName ="Berlin", basicPay= 25000},
+                new EmployeeModel(){ employeeName ="Jimmy", basicPay= 30000},
+                new EmployeeModel(){ employeeName ="Rupa", basicPay= 40000},
+                new EmployeeModel(){ employeeName ="Jason", basicPay= 50000},
+        };
+            DateTime startDateTime = DateTime.Now;
+            EmployeeRepo empRepoObj = new EmployeeRepo();
+            empRepoObj.UpdateMultipleEmployeeSalary(empModelList);
+            DateTime stopDateTime = DateTime.Now;
+            Console.WriteLine("Duration with thread: " + (startDateTime - stopDateTime));
+        }
     }
 }

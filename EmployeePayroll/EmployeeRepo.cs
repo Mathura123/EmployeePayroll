@@ -104,6 +104,25 @@
                 return false;
             }
         }
+        /// <summary>Updates the multiple employee salary.</summary>
+        /// <param name="models">The models.</param>
+        public void UpdateMultipleEmployeeSalary(List<EmployeeModel> models)
+        {
+            models.ForEach(employeeData =>
+             {
+                 Task thread = new Task(() =>
+                 { 
+                     Console.WriteLine("Salary being updated for : " + employeeData.employeeName);
+                     bool result = UpdateEmployeeSalary(employeeData);
+                     if (result)
+                         Console.WriteLine("Salary updated for : " + employeeData.employeeName);
+                     else
+                         Console.WriteLine("Employee not found");
+                 }
+                 );
+                 thread.Start();
+             });
+        }
         /// <summary>Gets employee by name.</summary>
         /// <param name="empName">Name of the emp.</param>
         /// <returns>true if emp model is returned.false if no data or connection failed</returns>
@@ -298,10 +317,10 @@
             {
                 Console.WriteLine("Employee being added: " + employeeData.employeeName);
                 bool result = AddEmployee(employeeData);
-                if(result)
-                Console.WriteLine("Employee added: " + employeeData.employeeName);
-                else 
-                Console.WriteLine("Employee" + employeeData.employeeName + "already added");
+                if (result)
+                    Console.WriteLine("Employee added: " + employeeData.employeeName);
+                else
+                    Console.WriteLine("Employee" + employeeData.employeeName + "already added");
             });
         }
         /// <summary>Adds the multiple employee with thread.</summary>
