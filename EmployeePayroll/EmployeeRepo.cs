@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data.SqlClient;
+    using System.Threading.Tasks;
 
     public class EmployeeRepo
     {
@@ -271,6 +272,8 @@
                         }
                         objTrans.Commit();
                         CustomPrint.PrintInRed($"{row2} rows inserted");
+                        if (row2 == 0)
+                            return false;
                     }
                     catch (Exception e)
                     {
@@ -294,10 +297,31 @@
             employeePayrollDetailsList.ForEach(employeeData =>
             {
                 Console.WriteLine("Employee being added: " + employeeData.employeeName);
-                AddEmployee(employeeData);
+                bool result = AddEmployee(employeeData);
+                if(result)
                 Console.WriteLine("Employee added: " + employeeData.employeeName);
+                else 
+                Console.WriteLine("Employee" + employeeData.employeeName + "already added");
             });
-            Console.WriteLine(employeePayrollDetailsList.ToString());
+        }
+        /// <summary>Adds the multiple employee with thread.</summary>
+        /// <param name="employeePayollDetailsList">The employee payoll details list.</param>
+        public void AddMultipleEmployeeWithThread(List<EmployeeModel> employeePayollDetailsList)
+        {
+            employeePayollDetailsList.ForEach(employeeData =>
+            {
+                Task thread = new Task(() =>
+                {
+                    Console.WriteLine("Employee being added: " + employeeData.employeeName);
+                    bool result = AddEmployee(employeeData);
+                    if (result)
+                        Console.WriteLine("Employee added: " + employeeData.employeeName);
+                    else
+                        Console.WriteLine("Employee" + employeeData.employeeName + "already added");
+                }
+                );
+                thread.Start();
+            });
         }
         /// <summary>Deletes the employee.</summary>
         /// <param name="empName">Name of the emp.</param>
