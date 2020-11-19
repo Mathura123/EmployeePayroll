@@ -285,7 +285,7 @@ select * from payroll
 ALTER TABLE payroll
 DROP COLUMN taxable_pay
 ALTER TABLE payroll
-DROP COLUMN net_pay
+SDROP COLUMN net_pay
 ALTER TABLE payroll
 DROP COLUMN income_tax
 ALTER TABLE payroll
@@ -318,7 +318,38 @@ select * from employee
 select * from payroll
 select * from department
 select * from employee_department
+select * from company
 
 select dept_id from department where dept_name = 'Marketing'
 
 exec SelectAllRowsFromEmployeePayroll
+
+select * from employee e where e.employee_id in 
+(select ed.employee_id from department d 
+inner join employee_department ed on d.dept_id = ed.dept_id
+where dept_name = 'HR');
+
+delete from employee
+where employee.name = 'Steve' and 
+employee.company_id in (select c.company_id from company c where company_name = 'Company2') and 
+employee.employee_id in (select ed.employee_id from department d inner join employee_department ed on d.dept_id = ed.dept_id where dept_name = 'HR')
+
+select * from employee e
+where e.employee_id in (select ed.employee_id from department d inner join employee_department ed on d.dept_id = ed.dept_id where dept_name = 'deptName')
+
+select * from company c 
+inner join employee e on c.company_id = e.company_id 
+inner join employee_department ed on ed.employee_id = e.employee_id 
+inner join department d on d.dept_id = ed.dept_id 
+inner join payroll p on p.employee_id = e.employee_id 
+where e.name = 'Terissa' and c.company_name = 'Company1' and d.dept_id = 100
+
+
+select * from employee 
+where employee.name = 'Terissa' and 
+employee.company_id in (select c.company_id from company c where company_name = 'Company1') 
+and employee.employee_id in (select ed.employee_id from department d inner join employee_department ed on d.dept_id = ed.dept_id where dept_name = 'Sales')
+
+delete from employee_department ed
+where ed.dept_id in (select d.dept_id from department d where d.dept_name = 'HR') and
+ed.employee_id in (select e.employee_id from employee e where e.name = 'Terissa' )

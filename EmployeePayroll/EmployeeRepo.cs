@@ -287,6 +287,25 @@
             }
             return false;
         }
+        /// <summary>Adds multiple employees to payroll.</summary>
+        /// <param name="employeePayrollDetailsList">The employee payroll details list.</param>
+        public void AddMultipleEmployee(List<EmployeeModel> employeePayrollDetailsList)
+        {
+            employeePayrollDetailsList.ForEach(employeeData =>
+            {
+                Console.WriteLine("Employee being added: " + employeeData.employeeName);
+                AddEmployee(employeeData);
+                Console.WriteLine("Employee added: " + employeeData.employeeName);
+            });
+            Console.WriteLine(employeePayrollDetailsList.ToString());
+        }
+        /// <summary>Deletes the employee.</summary>
+        /// <param name="empName">Name of the emp.</param>
+        /// <param name="companyName">Name of the company.</param>
+        /// <param name="deptNames">The dept names.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
         public bool DeleteEmployee(string empName, string companyName, string[] deptNames)
         {
             int row = 0;
@@ -479,7 +498,7 @@
             employeeModel.netPay = Math.Round(dr.GetDecimal(10), 2);
             Console.WriteLine(employeeModel);
         }
-        private void AddEmployeeIfNoCompanyDublicate(EmployeeModel empModel,SqlConnection connection, SqlTransaction objTrans, ref int id)
+        private void AddEmployeeIfNoCompanyDublicate(EmployeeModel empModel, SqlConnection connection, SqlTransaction objTrans, ref int id)
         {
             SqlCommand command1 = new SqlCommand($"insert into employee values " +
                             $"({empModel.companyId},'{empModel.employeeName}','{empModel.gender}','{empModel.phoneNumber}','{empModel.address}'); " +

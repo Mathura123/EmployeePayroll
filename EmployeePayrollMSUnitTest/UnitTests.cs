@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EmployeePayroll;
 using System;
+using System.Collections.Generic;
 
 namespace EmployeePayrollMSUnitTest
 {
@@ -50,6 +51,7 @@ namespace EmployeePayrollMSUnitTest
             empModelObj.employeeName = "Ruby";
             empModelObj.companyName = "Company2";
             empModelObj.address = "Dadar haveli, Pune";
+            empModelObj.departmentName = new string[] { "HR" };
             empModelObj.phoneNumber = null;
             empModelObj.gender = null;
             empModelObj.startDate = DateTime.Now;
@@ -65,10 +67,24 @@ namespace EmployeePayrollMSUnitTest
             EmployeeModel objModel = new EmployeeModel();
             objModel.employeeName = "Terissa";
             objModel.companyName = "Company1";
-            objModel.departmentName = new string[] { "Sales","HR","hj" };
+            objModel.departmentName = new string[] { "Sales", "HR", "hj" };
             EmployeeRepo objRepo = new EmployeeRepo();
             bool result = objRepo.DeleteEmployee(objModel.employeeName, objModel.companyName, objModel.departmentName);
             Assert.AreEqual(expected, result);
+        }
+        [TestMethod]
+        public void WhenGiven_EmpModelList_To_AddMultipleEmployee_Should_Add_MultipleEmp()
+        {
+            List<EmployeeModel> empModelList = new List<EmployeeModel>
+            {
+                new EmployeeModel(){ employeeName ="Bruce", companyName = "Company1" ,departmentName = new string[]{"HR" }, gender = "M",phoneNumber= "9999999999", address = "xyz", startDate = Convert.ToDateTime("12/09/2017"), basicPay= 10000},
+                new EmployeeModel(){ employeeName ="Banner", companyName = "Company2" ,departmentName = new string[]{"HR","Sales" }, gender = "M",phoneNumber= "9999999999", address = "xyz", startDate = Convert.ToDateTime("12/09/2017"), basicPay= 10000},
+                new EmployeeModel(){ employeeName ="clark", companyName = "Company2" ,departmentName = new string[]{"HR","Enigineering" }, gender = "M",phoneNumber= "9999999999", address = null, startDate = Convert.ToDateTime("12/09/2017"), basicPay= 10000},
+                new EmployeeModel(){ employeeName ="Mike", companyName = "Company1" ,departmentName = new string[]{"HR"}, gender = "M",phoneNumber= "9999999999", address = "xyz", startDate = Convert.ToDateTime("12/09/2017"), basicPay= 10000},
+                new EmployeeModel(){ employeeName ="Jason", companyName = "Company3" ,departmentName = new string[]{"Marketing","Sales" }, gender = null,phoneNumber= "9999999999", address = null, startDate = Convert.ToDateTime("12/09/2017"), basicPay= 10000},
+        };
+            EmployeeRepo empRepoObj = new EmployeeRepo();
+            empRepoObj.AddMultipleEmployee(empModelList);
         }
     }
 }
