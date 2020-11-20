@@ -157,33 +157,6 @@ namespace EmployeePayrollMSUnitTest
             }
         }
         [TestMethod]
-        public void givenEmployee_OnPost_ShouldReturnAddedEmployee()
-        {
-            RestRequest request = new RestRequest("/employees", Method.POST);
-            JObject jObjectbody = new JObject();
-            jObjectbody.Add("employeeName", "Clark");
-            jObjectbody.Add("companyId", 1);
-            jObjectbody.Add("companyName", "Company1");
-            jObjectbody.Add("departmentId", 101);
-            jObjectbody.Add("departmentName", "Sales");
-            jObjectbody.Add("gender", "F");
-            jObjectbody.Add("phoneNumber", null);
-            jObjectbody.Add("address", null);
-            jObjectbody.Add("startDate", "12/12/2019");
-            jObjectbody.Add("basicPay", 15000);
-            jObjectbody.Add("deductions", 5000);
-            jObjectbody.Add("taxablePay", 1000);
-            jObjectbody.Add("tax", 1200);
-            jObjectbody.Add("netPay", 45000);
-
-            request.AddParameter("application/json", jObjectbody, ParameterType.RequestBody);
-
-            //act
-            IRestResponse response = client.Execute(request);
-            Assert.AreEqual(response.StatusCode, System.Net.HttpStatusCode.Created);
-
-        }
-        [TestMethod]
         public void givenMultipleEmployee_OnPost_ShouldReturnAddedEmployee()
         {
             RestRequest request = new RestRequest("/employees", Method.POST);
@@ -223,6 +196,33 @@ namespace EmployeePayrollMSUnitTest
             //act
             IRestResponse response = client.Execute(request);
             Assert.AreEqual(response.StatusCode, System.Net.HttpStatusCode.Created);
+
+        }
+        [TestMethod]
+        public void givenEmployee_OnPut_ShouldReturnAddedEmployee()
+        {
+            RestRequest request = new RestRequest("/employees/2", Method.PUT);
+            JObject jObjectbody = new JObject();
+            jObjectbody.Add("employeeName", "Clark");
+            jObjectbody.Add("companyId", 1);
+            jObjectbody.Add("companyName", "Company1");
+            jObjectbody.Add("departmentId", 101);
+            jObjectbody.Add("departmentName", "Sales");
+            jObjectbody.Add("gender", "F");
+            jObjectbody.Add("phoneNumber", null);
+            jObjectbody.Add("address", null);
+            jObjectbody.Add("startDate", "12/12/2019");
+            jObjectbody.Add("basicPay", 40000);
+            jObjectbody.Add("deductions", 5000);
+            jObjectbody.Add("taxablePay", 1000);
+            jObjectbody.Add("tax", 1200);
+            jObjectbody.Add("netPay", 45000);
+
+            request.AddParameter("application/json", jObjectbody, ParameterType.RequestBody);
+
+            //act
+            IRestResponse response = client.Execute(request);
+            Assert.AreEqual(response.StatusCode, System.Net.HttpStatusCode.OK);
 
         }
     }
