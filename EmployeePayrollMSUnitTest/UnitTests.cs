@@ -183,5 +183,47 @@ namespace EmployeePayrollMSUnitTest
             Assert.AreEqual(response.StatusCode, System.Net.HttpStatusCode.Created);
 
         }
+        [TestMethod]
+        public void givenMultipleEmployee_OnPost_ShouldReturnAddedEmployee()
+        {
+            RestRequest request = new RestRequest("/employees", Method.POST);
+            JObject[] jObjectbody = new JObject[2];
+            jObjectbody[0].Add("employeeName", "Clark");
+            jObjectbody[0].Add("companyId", 1);
+            jObjectbody[0].Add("companyName", "Company1");
+            jObjectbody[0].Add("departmentId", 101);
+            jObjectbody[0].Add("departmentName", "Sales");
+            jObjectbody[0].Add("gender", "F");
+            jObjectbody[0].Add("phoneNumber", null);
+            jObjectbody[0].Add("address", null);
+            jObjectbody[0].Add("startDate", "12/12/2019");
+            jObjectbody[0].Add("basicPay", 15000);
+            jObjectbody[0].Add("deductions", 5000);
+            jObjectbody[0].Add("taxablePay", 1000);
+            jObjectbody[0].Add("tax", 1200);
+            jObjectbody[0].Add("netPay", 45000);
+
+            jObjectbody[1].Add("employeeName", "Mahi");
+            jObjectbody[1].Add("companyId", 1);
+            jObjectbody[1].Add("companyName", "Company1");
+            jObjectbody[1].Add("departmentId", 101);
+            jObjectbody[1].Add("departmentName", "Sales");
+            jObjectbody[1].Add("gender", "F");
+            jObjectbody[1].Add("phoneNumber", null);
+            jObjectbody[1].Add("address", null);
+            jObjectbody[1].Add("startDate", "12/12/2019");
+            jObjectbody[1].Add("basicPay", 15000);
+            jObjectbody[1].Add("deductions", 5000);
+            jObjectbody[1].Add("taxablePay", 1000);
+            jObjectbody[1].Add("tax", 1200);
+            jObjectbody[1].Add("netPay", 45000);
+
+            request.AddParameter("application/json", jObjectbody, ParameterType.RequestBody);
+
+            //act
+            IRestResponse response = client.Execute(request);
+            Assert.AreEqual(response.StatusCode, System.Net.HttpStatusCode.Created);
+
+        }
     }
 }
