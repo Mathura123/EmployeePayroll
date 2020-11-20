@@ -225,5 +225,18 @@ namespace EmployeePayrollMSUnitTest
             Assert.AreEqual(response.StatusCode, System.Net.HttpStatusCode.OK);
 
         }
+        [TestMethod]
+        public void givenEmployee_OnDelete_ShouldReturnDeletedEmployee()
+        {
+            RestRequest request = new RestRequest("/employees/2", Method.DELETE);
+            JObject jObjectbody = new JObject();
+
+            request.AddParameter("application/json", jObjectbody, ParameterType.RequestBody);
+
+            //act
+            IRestResponse response = client.Execute(request);
+            Assert.AreEqual(response.StatusCode, System.Net.HttpStatusCode.OK);
+
+        }
     }
 }
