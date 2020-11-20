@@ -1,10 +1,13 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using EmployeePayroll;
-using System;
-using System.Collections.Generic;
-
 namespace EmployeePayrollMSUnitTest
 {
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using EmployeePayroll;
+    using System;
+    using System.Collections.Generic;
+    using RestSharp;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+
     [TestClass]
     public class UnitTests
     {
@@ -122,6 +125,36 @@ namespace EmployeePayrollMSUnitTest
             empRepoObj.UpdateMultipleEmployeeSalary(empModelList);
             DateTime stopDateTime = DateTime.Now;
             Console.WriteLine("Duration with thread: " + (startDateTime - stopDateTime));
+        }
+
+        RestClient client;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            client = new RestClient("http://localhost:5000");
+        }
+        private IRestResponse getEmployeeList()
+        {
+            RestRequest request = new RestRequest("/employees", Method.GET);
+
+            //act
+            IRestResponse response = client.Execute(request);
+            return response;
+        }
+        [TestMethod]
+        public void OnCallingGETApi_ReturnEmployeeList()
+        {
+            IRestResponse response = getEmployeeList();
+
+            //assert
+            Assert.AreEqual(response.StatusCode, System.Net.HttpStatusCode.OK);
+            List<EmployeeModel> dataResponse = JsonConvert.DeserializeObject<List<EmployeeModel>>(response.Content);
+            Assert.AreEqual(2, dataResponse.Count);
+            foreach (EmployeeModel item in dataResponse)
+            {
+                Console.WriteLine(item);
+            }
         }
     }
 }

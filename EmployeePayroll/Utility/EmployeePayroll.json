@@ -1,0 +1,59 @@
+{
+  "employees": [
+    {
+      "id": 1,
+      "employeeName": "Pankaj",
+      "companyId": 1,
+      "companyName": "Company1",
+      "departmentId": [
+        101
+      ],
+      "departmentName": [
+        "Sales"
+      ],
+      "gender": "F",
+      "phoneNumber": null,
+      "address": null,
+      "startDate": "12/12/2019",
+      "basicPay": 90000,
+      "deductions": 5000,
+      "taxablePay": 1000,
+      "tax": 1200,
+      "netPay": 45000
+    },
+    {
+      "employeeName": "Clark",
+      "companyId": 1,
+      "companyName": "Company1",
+      "departmentId": 101,
+      "departmentName": "Sales",
+      "gender": "F",
+      "phoneNumber": null,
+      "address": null,
+      "startDate": "12/12/2019",
+      "basicPay": 15000,
+      "deductions": 5000,
+      "taxablePay": 1000,
+      "tax": 1200,
+      "netPay": 45000,
+      "id": 2
+    },
+    {
+      "employeeName": "Clark",
+      "companyId": 1,
+      "companyName": "Company1",
+      "departmentId": 101,
+      "departmentName": "Sales",
+      "gender": "F",
+      "phoneNumber": null,
+      "address": null,
+      "startDate": "12/12/2019",
+      "basicPay": 15000,
+      "deductions": 5000,
+      "taxablePay": 1000,
+      "tax": 1200,
+      "netPay": 45000,
+      "id": 3
+    }
+  ]
+}

@@ -4,7 +4,7 @@
     /// <summary>
     ///   For creating custom printing
     /// </summary>
-    class CustomPrint
+    public class CustomPrint
     {
         private static int tableWidth =190;
         /// <summary>Prints the dash line</summary>
